@@ -1,0 +1,18 @@
+Environment and Parameters management
+As; 
+	user/developer/it manager
+
+I wish; 
+	I could manage easily properties and other parameters, such as file structure with different values for different environments.
+
+In order to; 
+	Avoid a problem faced nowadays when the app deployed on different servers, each one on a different environment, and the parameters for the app on these enviornment must have different values, but the file structure is the same (thus only the values are different).
+
+Required Features;
+	1 - Define a base file structure with static content alongside placeholders for the mutable values.
+	2 - Register values which is going to be replaced on placeholders when a resulting file is downloaded.
+	3 - Allow the user to download a resulting file (providing query parameters, e.g; environment, file-name, etc), with every placeholder replaced with its corresponding recorded value.
+	4 - Provide a functionality to show difference between environments (for the values) for a given file-name, show existing diffs + if some property exists on just one environment but does not on another.
+
+Desirable Features;
+	1 - A resulting file could be composed by more than one file, so when structuring a file, it has to be possible to provide a inner file-name to be composed by it.

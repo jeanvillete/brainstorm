@@ -1,0 +1,35 @@
+O que muda do ponto de vista de desenvolvimento (time de arquitetura)?
+- Recursos motivados, trabalhando com tecnologias e cultura de indústria atualizada.
+  - Aplicação de DevOps, Continous Integration e Continous Delivery
+- Aplicação de soluções com maior leque de possibilidades, cache com MemCache/Redis, bancos de dados NoSql
+
+Como é hoje um release? Da concepção de uma necessidade (minor, feature, major) até a entrega;
+- Demanda levantada, discutida em reuniões, emails e documentadas
+  - FSD, BRD, e outros documentos mal formatados, com poucas informações relevantes e muitas informações desnecessárias. Documentos como estórias no Scrum, são claros, objetivos e necessariamente concisos.
+  - Metodologias ágeis pedem que todos os envolvidos numa demanda participem e estejam cientes da necessidade, business + dev + ops
+- Desenvolvedores obtém código atual, codificam e testam localmente, logo depois leval solução para ambiente de SIT para integração com outros componentes (outros serviços, Rest, DataBase, etc)
+  - Metodologias ágeis pedem que as estórias sejam escritas com critérios de aceite, que por fim direciona bastante os testes mínimos de desenvolvimento e depois em UAT
+- Efetua promoção para UAT de maneira manual, disponibilizando pacote no host, deployando no Application Server, efetuando alterações em filesystem (/logs/..., /interfaces/..., etc.)
+  - Error prone; Atividade de provisionamento de recursos e deploy devem ser automatizados.
+  - É comum que os desenvolvedores e outros integrantes de IT tenham acesso e façam a promoção para UAT, quanto na verdade isto deveria ser totalmente proibido.
+    Em alguns casos, aplicações são atualizadas apenas em UAT e nem passam por SIT, uma vez que o ambiente de SIT é uma verdadeira várzea, terra sem dono. Daí quando pedem para encontrar tal aplicação em SIT é um verdadeiro "Deus nos acuda".
+    Infelizmente é fácil entender porque chegamos neste cenário, pois são máquinas compartilhadas entre várias aplicações, com vários recursos provisionados que nunca são devolvidos. E ainda quando sofre replacement de recursos humanos, é perdido bastante conhecimento dos estados das máquinas, uma vez que cada recurso humano que gerencia os hosts, o fazem da sua maneira, mas o recurso humano que chega por ultimo sempre tem medo de "mexer no que tá quieto". Assim é uma das formas de se criar "terra de ninguém".
+  - Outra coisa que incomoda é fato dos estados das máquinas e capacidade serem bastante diferentes de ambiente para ambiente, piorando quando SIT é diferente de UAT que é diferente de PROD (e de PROD para DR).
+    Isto leva sempre ao iniciar uma atividade em uma aplicação, solicitar informações de PROD de maneira recorrente, pois nunca dá para confiar nos estados dos vários ambientes. (/interfaces/..., /logs/..., variáveis de ambiente, timezone, OS, etc.)
+- Após testes efetuados pelos usuários, ganhamos sign-off e iniciamos processo de empacotamento (preparação da change)
+  - Nem precisa mencionar novamente que todo o cuidado deve ser tomado por conta da diferença entre os vários ambientes
+  - Documentamos todos os passos a serem efetuados no servidor de produção VERBALMENTE EM UM .DOC, para um recurso pegar este documento e executar num segundo momento
+    - Double Error Prone; Neste momento há pontos de falha tanto em quem documenta o Deployment Descriptor quanto em quem executa, e sem mencionar quando o recurso de Ops é trocado, o recém chegado naturalmente não é familiarizado com o ambiente ao qual TEM QUE EFETUAR ALTERAÇÕES e que é totalmente factível de cometer errors. Num servidor que é compartilhado com várias aplicações, os riscos são verdadeiramente muito altos.
+    - É comum neste momento solicitarmos arquivos de produção que precisam ser alterados, pois não temos certeza de como está de fato tais conteúdos em produção (black box)
+- Chega no dia do release;
+  - fila de changes a serem efetuadas em produção, uma a uma
+    - uma change atrasa? as outras ficam aguardando
+  - horas extras para todos os recursos envolvidos
+  - qual o momento de levar as alterações para DR?
+    - replicação feita para DR de modo manual, isto é inadimissível
+- Num cenário de rollback
+  - o tempo de efetuar as atividades manualmente é muito extenso, tenso/inseguro, oneroso e "error prone"
+  - qual o momento de levar as alterações de um rollback para DR?
+    - replicação feita para DR de modo manual, isto é inadimissível
+
+Qual cenário desejado? [Código é documentação, desde de Dev até Ops(deployment)]

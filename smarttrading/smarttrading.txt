@@ -1,0 +1,57 @@
+# aplicação para negociação entre consumidor e vendedores
+
+[objetivo]
+- construir uma aplicação que possibilite e efetive negociações entre consumidores e vendedores, onde estes vendedores podem ser outras pessoas físicas ou empresas (jurídicas), das mais diversas áreas e localidades
+- o objetivo principal é colocar o comprador em potencial no foco da negociação, e mostrar que independentemente da capacidade financeira de adquirir ou não um bem, este comprador é quem está em primeiro lugar, ele é quem irá expôr/dar as cartas, em ações semelhantes a pexinxas, oferecendo o dinheiro que o cliente tem em mãos, na tentativa de encontrar um vendedor que aceite os termos do comprador/consumidor
+	- a ideia é então dar poder de negociação ao comprador
+	- hoje em dia, temos inúmeras aplicações, de gigantes (ou não tão gigantes) empresas da computação (google, facebook, mercado livre, olx, buscape, zoom, bondfaro) que aproximam os vendedores/empresas/marcas à consumidores; onde dado o produto X (geralmente porque um potencial comprador/consumidor fez uma busca pelo produto X) da empresa Y, quais potenciais compradores/pessoas/consumidores podem comprar este produto.
+		- talvez por estes potenciais compradores/consumidores precisarem de fato do produto, ou por tal produto ser um simples artefato de status; independentemente, o que ocorre, é que estas empresas detentora dos softwares que dão match brand-vs-consumer, fazem algoritmos que no fim ficam jogando propagandas para os consumidores, mas o que ocorre se temos um real (não mais apenas potencial) comprador/consumidor que não tem todo o dinheiro pedido pelo vendedor, mas uma quantia razoável? não poderia (ao menos tentar) ocorrer uma negociação?
+		- e até existem algumas ferramentas (zoom, bondfaro) que oferecem opções de avaliação de preços dos produtos, inclusive de alertas para os consumidores de quando determinados produtos alcançarem os valores desejados (mais barato, lógico), mas indiscutivelmente, todas as aplicações disponíveis são desenvolvidas por empresas, onde apenas tais empresas se expõem, só elas ofertam, elas dão as cartas, só elas tem o poder, e o consumidor aceita ou não pagar tal valor, e o máximo que o consumidor tem de opção hoje em dia, é de olhar um cardápio de opções e arriscar comprar ou não de um ou outro vendedor/companhia
+
+[necessidade particular]
+- eu tinha 18 anos e estava entrando na faculdade, quando precisei comprar um livro técnico bastante específico
+- eu tinha bem pouco dinheiro então meu objetivo era econimizar ao máximo na compra do livro, em especial porque era o típico livro que seria lido uma vez e depois deixado de lado, pois após o conhecimento obtido, muito dificilmente voltaria a olhar para o livro novamente
+- a única opção que eu tinha era sair pesquisando em ferramentas de busca (google, bing) pelo livro, onde na maior parte das vezes era redirecionado para sites que vendiam o livro novo, e após algumas horas de busca, cheguei no site "estante virtual" e encontrei alguém que tinha o livro (usado, se é que tem como usar um livro) que então me vendeu por um preço muito interessante/barato
+- em 2007/2008, as redes sociais já estavam bombando, e era notório o quanto compartilhamento de conteúdos alcançavam números absurdos de usuários
+
+- o que eu gostaria naquele momento era que eu pudesse colocar em alguma ferramenta, o nome do livro que eu buscava, e o valor que eu tinha para pagar, e esperava que;
+	- naquele momento de bastante compartilhamento (via facebook, orkut, twitter), eu esperava que a ferramanta disponibilizasse em meios de compartilhamento a minha busca com os parâmetros (livro e o valor que estou disponível a pagar) e que talvez isto pudesse alcançar pessoas que possivelmente tivesse o livro guardado e disponível para venda, ou seja, eu (o consumidor/comprador) tentaria disparar "busca" para o produto desejado na expectativa de alcançar um grande número de outros usuários, e que algum fosse o potencial vendedor (por ter o produto, mas não ter dispertado o interesse em vender de antemão).
+		- neste primeiro momento, a ideia era que pessoas muitas vezes compram produtos por impulsão e deixam estes produtos guardados, e que talvez pudessem vender estes produtos não utilizado mais barato, então me veio a cabeça naquele momento uma aplicação que buscasse potencial vendedores (naturalmente de produtos usados), baseado numa necessidade minha, ou seja, estas pessoas que compraram por impulsão não iriam colocar por conta própria seus produtos a venda, mas e se elas vissem "anúncios" de outras pessoas que estão procurando por este produto? esta pessoa poderia então neste momento despertar a ideia de vender aquele artefato que está guardado.
+		** o OLX iniciou propagandas com o jargão que ficou bastante conhecido chamado "desapega" (desapega... desapega... OLX!), que me levanta a ideia de um mercado ainda não explorado por eles mesmo, que é justamente o fato de eles colocarem propagandas em redes sociais e etc., de anuncios (de venda) efetuados na ferramenta OLX, mas ao meu ver eles não conseguem atingir o publico do "desapega", pois eles publicam apenas os anuncios de venda, e não anuncios de compradores, que aí então poderia chegar até os reais/possiveis "desapegadores" **
+	- que a ferramenta me ajudasse a encontrar os vendedores que pudessem vender o livro no valor que eu estava disposto a pagar, ou que no mínimo me fizesse alguma contra-proposta
+
+[cadastro de interesse]
+- como um comprador, eu gostaria de ter a possibilidade de cadastrar um produto e dizer quanto eu tenho ou estou disposto a pagar por este produto
+	- a maneira de cadastro deste produto deveria ser o mais friendly possível;
+		- (maneira difícil/onorosa/chata) poderia fazer o cadastro em um formulário com campos/dados estruturados
+			- fornecer informações do produto, como marca, modelo, etc.
+		- (direcionado) permitir fazer o cadastro via um chatbot
+			- as informações desta maneira também ficam estruturadas, onde o bot faz perguntas e o usuário vai respondendo sob demanda, perguntas como;
+				- qual o produto? a marca? 
+				- categoria do produto? 
+				- precisa ser novo?
+				- tem a url de onde o produto foi visto?
+		- permitir fazer o cadastro de um produto através de uma url
+			- ao informar determinada url, a aplicação deve ser capaz de capturar as seções que correspondem de fato ao produto, indicando categoria, marca, modelo, etc.
+	- se está apenas olhando (por olhar) ou tem interesse real de efetivar a compra
+		- se tem interesse em efetivar a compra;
+			- quanto está disposto a pagar
+			- gostaria que o software iniciasse negociação com as partes (encontradas) que vendem o produto
+
+[possibilitar contato entre pessoas]
+- esta aplicação deve permitir o cadastro não só de consumidores, mas também de potencial vendedores, ou que neste caso seriam pessoas que executariam de maneira mais pessoal/humana, as atividades de negociação (procura disponibilização dos produtos desejados pelo consumidor) feitas pela inteligência artificial
+	- imagine uma pessoa que é por padrão vendedor, mas não vendedor de um produto ou de uma marca específica (não representa uma única marca ou um único produto), mas caso alguém perguntar para ela se ela tem um produto para vender, esta pessoa vai correr atrás de quem tem ou vai tentar comprar (mais barato) e vender (mais caro), então estas pessoas poderiam utilizar a ferramenta para ajudá-las neste processo de comercialização
+	- veja que sabemos que existem milhares de aplicações que permitem pessoas communs serem vendedoras, ou simplesmente venderem esporadicamente algum produto, por exemplo, ferramentas como, mercado livre ou olx, mas não é este serviço que pretendo atacar, e sim disponibilizar uma ferramenta que estes vendedores sejam alcançados por compradores
+
+[inteligência artificial]
+- esta aplicação deve ter a capacidade de interpretar um potencial comprador para um produto X, encontrar e negociar com quem esteja comercializando este produto X, independentemente de barreiras como localidade, lingua, etc.
+- conseguindo inclusive dar choques de realidade ao comprador ou vendedor
+	- caso o consumidor fornece uma valor muito abaixo, 
+
+[no primeiro momento]
+- não há rentabilidade, não sei como poderia ganhar dinheiro com esta aplicação
+- não sei se vale o investimento em anuncios em redes sociais (facebook, twitter, etc) para compradores, ou se não fazemos o investimento e deixamos a ação de compartilhamento via ação direta do usuário.
+
+# ser carismático talvez seja mais importante do que transparecer confiança, pois a confiança pode ser facilmente conquistada através da aparência carismática, o que é importantíssimo para vendas
+
+# names; trading, vendemos, eucompro.com.br, smarttrading.com

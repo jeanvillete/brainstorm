@@ -1,0 +1,75 @@
+Por que o nome organic app?
+	Determinada aplicação/produto como um todo cresce organicamente, sem downtimes, com menor acoplamento e a maior coesão possível.
+	O produto cresce, novas features são adicionadas/deployed, atualizadas e/ou removidas/undeployed, sem um impacto na execução do todo.
+	Orgânico porque o produto é mutável, onde mais ou menos features/orgãos/componentes pode(m) ter um impacto no produto mas que não impede que o produto esteja em plena operação caso tais features não estejam.
+
+Objetivo
+	Desenvolver um framework onde cada componente tenha uma responsabilidade, mas que cada um não saiba nem ao menos da existência de outros componentes, o que deve permitir que uma aplicação seja desenvolvida em pequenos pedaços, com pequenas responsabilidades com o mais baixo acoplamento possível e a mais alta coesão.
+	Isto deve permitir que mesmo que uma aplicação (como um todo) já esteja em pleno funcionamento/operação, um novo componente possa ser plugado/desplugado a esta aplicação/produto sem que esta tenha nenhum downtime. O componente acopla ao fluxo principal (sem o conhecimento dos outros componentes), executa suas tarefas e pode ser desacoplado sem que os outros componentes tenham qualquer ciência do ocorrido.
+	Não deve existir (ou ser aceitável) um fluxo engessado. A aplicação/produto como um todo deve ser mutável, poder crescer ou diminuir em tamanho (e escalonamento) de maneira orgânica sem nunca haver downtime como um todo.
+	
+Linguagem de Programação
+	Nenhuma linguagem de programação deve ser barreira, ou seja, a aplicação/produto como um todo pode ser composta de vários componentes desenvolvidos cada um com uma linguagem de programação diferente.
+
+Origem e Saída de dados
+	Cada componente conhece uma fonte de dados e opcionalmente tem uma saída de dados, exatamente como ocorre com pipelines em linux (a saída de um componente será provavelmente a entrada de dados de outro).
+	A fonte/origem e saída (opcional) de dados deve ser das mais diversas maneiras, e.g; Banco de dados, Mensagerias (JMS, Filas, Topicos), File System, Apache Kafka, etc.
+	A única coisa a ser imposta, é que a responsabilidade de obter a informação da origem de dados e sua opcional saída, é de responsabilidade do próprio componente, ou seja, para que seja evitado ao máximo qualquer acoplamento entre componentes.
+		NOTA: Como cada componente conhece uma fonte de dados, seria bastante importante NÃO ter componentes que façam tarefas de Transformers em função de outros componentes, ou seja, cada componente recupera suas informações nas fontes de dados exatamente como a informação está disponível, e se este componente precisa fazer transformação, ele mesmo deve fazê-lo, novamente, evitando ao máximo qualquer acoplamento.
+			- Uma aplicação só é integra caso seus objetos sejam integros. Objetos só são integros caso suas classes sejam integras. Classes são integras caso seus construtores são integros e que exponham apenas acessores (setters/getters) necessários e que nunca coloque o objeto em risco. Sendo assim, não utilize transformers, pois cada componente deve ter sua responsabilidade de transformação.
+		NOTA: Isto está muito próximo da idéia de componentes e canais no "design pattern para enterprise integration".
+
+Processamento no estilo Stream Processing, ou talvez melhor, Linux pipelines
+	- allow real time analytics (no necessary triggers for starting jobs for processing data)
+	- fair resource consume; it process data as it arrives, opposite to deferred batch processing
+	- (apache kafka)
+	- aplicações/componentes são escritos independentemente e quando em execução, confiam numa entrada de dados e após seu processamento coloca o resultado na saída, para que outra aplicação/componente possa continuar a execução, onde o todo compõe uma aplicação.
+	- stateless
+	- map / filter / reduce
+		- map; transforms one record to one record, e.g. change format of the record, enrich record with some data
+			- flatMap; outputs zero or more records for each input record, e.g. tokenize a record containing a sentence into individual words
+		- filter; filters out the records that doesn't satisfy the predicate
+		- reduce; não implementamos no caso as funções que de maneira geral são stateful, como agregação, agrupamento, joins, sort, etc. Cada componente deve fazer este tipo de atividade, então neste caso, o que fazemos parece mais ser como pipeline no linux.
+	
+Processamento no estilo Functional Programming
+	- Due to the nature of distributed computation, you can't just provide arbitrary imperative code that processes the data — you must describe it declaratively.
+	
+	Functional Programming
+	- Easier to understand and debug
+	- Cheaper and easier to maintain
+	- More legible
+	- More reusable
+	- More testable
+	- Less error-prone
+		# sure thing, much from it is around object-oriented language
+	
+	Rules (three);
+		1 - Use functions over loops whenever possible;
+			It's much better because it is declared (declarative way) what should happens (the processing code) for each element on a data structure (Map, List, Array, Collection, etc.), different than what we usually do on an imperative way, declaring loops (for, while, do-while, etc.) where we need write code that says what must be done "with the entire data structure".
+			On imperative way, we have the data structure and explicits everything we wanna do with it, e.g., precess the entire structure or recover some elements from it which mets some requirements.
+			On declarative way, the language/api provides some methods (forEach, filter, map, max, etc.) which allows the programmer to "declare" on each of those methods what must be done over the data structure.
+		2 - Always return the same result given the same arguments;
+			It is about the data type. If you process something which result in something, so; if you give to a function integer (arguments), so it should do some calcs and return a result of integer data type.
+		3 - Write functions that do one (and only one) thing;
+			Divide to conquer, the same fundamental from oriented-programming languages idea (for those who understand this model).
+	
+Monitoramento
+	Toda aplicação que se prese, deve permitir um monitoramento do que está acontecendo com a informação sensível sendo processada pelos componentes (mesmo que individualmente). Sendo um componente importante que talvez tenha um pequeno acoplamento mas necessário, seja um componente de monitoramento, de log do processamento dos outros componentes.
+	Este acoplamento deve ser bem sútil, a ponto que permita que outros módulos saibam a hora de emitir logs para o componente de monitoramento, mas não vão dizer a estrutura de dados do componente de monitoramento e nem como isto será processado pelo monitor.
+	O monitor por sua vez, tem a função de ler as informações do seu canal de entrada e registrar estas informações de maneira estruturada que lhe permita num segundo momento apresentar estas informações para um usuário que irá operar este monitor.
+	
+	- Possibilidade de republishing; Este monitor pode apenas servir de monitoramento para acompanhar o fluxo da informação sendo processada pelos vários componentes, ou pode atuar de uma maneira auxiliar registrando cada entrada de cada componente plugado ao fluxo principal, para possibilitar um possível "republishing".
+	
+	- Registrando componente; Uma funcionalidade interessante para monitoramento, é para quando um componente iniciar sua execução/instância (se plugar ao fluxo da aplicação) este deveria/poderia se registrar, logando uma mensagem que indique;
+		- uma id/string descritivo para o componente (sugiro que a versão do componente faça parte do id, e.g; myComponentName-1.3.1-RELEASE)
+		- (opcional) uma descrição do que o componente faz, ou como faz (qual sua fonte de dados, o que faz com esta informação, caso tenha uma saída/destino, qual é esta)
+		- (opcional) se tem heart beat, qual a url (host:port/contextName e verbo http) para chegar e avaliar este heart beat (verificar se o componente está rodando)
+	
+Exemplo 1
+	Imagine uma aplicação/produto para o setor bancário, onde esta aplicação/produto analisa em tempo real se as transações de determinados clientes são válidas, onde por dizer são "válidas", quero dizer transações em conformidade com perfil do cliente.
+	As regras para definição de estar ou não em conformidade com o perfil do cliente mudam. Novos golpes são aplicados e talvez até podemos chamar de aperfeiçoados por pessoas maliciosas periodicamente, então as regras para verificação das transações podem ser adicionadas, e as regras que já existem continuam válidas. Portanto, não faz sentido implementar as novas regras no produto (monolitico) e solicitar um downtime para redeploy do produto inteiro, para que a tal nova regra comece a ser aplicada. O ideal é que o produto continuasse em funcionamento 24/7, e ao passo que esta regra esteja implementada, esta possa ser deployada e imediamente ela comece a ser aplicada. Um crescimento orgânico das regras a serem aplicadas.
+	E se o nível de aplicação destas regras fosse tão importante que tivessemos times de desenvolvimento independentes e diferentes/espalhados que trabalhassem em regras e comportamentos (áreas de conformidade) diferentes, e cada time pudesse trabalhar ter o foco apenas nas suas atividades, fazendo manutenção nos seus códigos, fizessem deployes, redeployes, undeployes sem que o produto como um todo não tivesse nenhum downtime, e além do desenvolvimento, também infraestrutura pudesse sofre upgrade, escalonamentos sem o downtime no produto.
+	
+Exemplo 2
+	Quando temos aplicações/produtos que existem integrações entre aplicações, é muito comum o conhecimento não apenas das pessoas envolvidas na integração mas também de um certo conhecimento por parte dos softwares, que geralmente estabelecem protocolos de comunicação, ou como uma aplicação deve disponibilizar seus dados para que outra aplicação consiga ler, ou ainda, se uma aplicação precisa de informação de outra, talvez a aplicação que detém a informação expõe um serviço rest/rpc, etc. São várias as abordagens para integração entre aplicações, mas que normalmente põe certo conhecimento entre as aplicações.
+	Com a ideia de aplicações orgânicas isto não deveria ocorrer, pois deveríamos seguir alguns modelos de desenvolvimento de software com programação funcional que nos permite evoluir de maneira natural.

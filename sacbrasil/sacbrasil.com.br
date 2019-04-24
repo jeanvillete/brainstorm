@@ -1,0 +1,43 @@
+[BRAIN STORM; sacbrasil.com.br]
+* gostaria de poder avaliar serviços oferecidos por empresas, de maneira geral publica
+* a idéia não é avaliar uma determinada empresa em específico, mas um determinado serviço que esta presta através de determinado canal, dando a possibilidade de o usuário criticar e fazer sugestão.
+
+* gosto do serviço da netcombo quando ligo por telefone, o robô é inteligente, amigável. a interação é digitando números que referenciam opções, mas é assertivo, e é bem legal o fato de eles saberem que sou eu quando eu ligo através do meu celular, eles me identificam de maneira rápida.
+
+* precisei utilizar o serviço do seguro bradesco (por empresa) e a experiência de conversar com o robô deles foi bem ruim, uma vez que a mesma teve dificuldades de entender o que eu tinha dito, e pior, eu pronunciei uma opção e a mesma me perguntou se eu tinha dito uma outra opção "bem diferente por sinal", isto foi engraçado e desapontador ao mesmo tempo, inflamando a idéia/preconceito negativo sobre telemarketing e tele atendimento em geral, da atividade burocratica e da necessidade de se ter um "macaco adestrado" do outro lado da linha. talvez se o serviço/robô atendesse via pronúncia, mas se estivesse errado e desse a possibilidade de interação via teclado, fosse mais amigável.
+
+* levar em consideração as "razões brilhantes" levantadas por alexander no post; http://positivesharing.com/2014/02/kill-suggestion-box-heres-much-better-way/
+	1: It’s visual
+	2: It’s low-tech
+	3: It’s fast
+	4: It has memory
+	5: It’s transparent
+
+* possibilitar a avaliação do que merece ser votado e o que merece ser desconsiderado. além disto do que deve ser removido do ambiente público (e.g; ofensas)
+
+* afim de não se tornar obsoleto tão rápido, então não permitir críticas destrutivas e nem o uso de palavras/expressões ofensivas.
+
+* como o nr de caracteres será limitado, o uso de acrônimos e abreviações será altamente suportado/apoiado.
+
+* já existem alguns sites/aplicações que fazem coisas semelhantes, analisa-los antes, afim de ver o que fazem semelhante e se atende o público alvo (no caso se me atenderia);
+	https://www.suggestionox.com/
+	http://freesuggestionbox.com/
+	https://www.getvetter.com/
+
+* prestar serviço simples, que não confunda o usuário.
+	se preocupar muito mais com UX do que com UI.
+
+[tecnologia]
+* limitar quantidade de caracteres de maneira a ser mais assertivo com o que o usuário deseja
+* na medida do possível, advinhar algumas informações que o usuário está inputando, tornando ao mesmo tempo a aplicação acertiva e mostrando o leque de possibilidades para o usuário.
+* o usuário deveria ter apenas um campo de texto para inputar a avaliação completa, que entendo por momento;
+	a empresa/instituição/órgão/entididade a ser avaliada (e.g; o site google.com, a empresa netcombo, prefeitura de sorocaba)
+	a crítica 
+	a sugestão, levando em conta que geralmente a sugestão faz sentido quando a avaliação é uma crítica de algo que não está muito bom. já caso o serviço seja bom, talvez a avaliação seja simplesmente uma elogio.
+
+* desenvolver app utilizando progressive web app, e também;
+	rest api
+	reactive
+	java 8, node js
+	bootstrap components
+	banco de dados relacional e nosql, (olhar no datatomic), talvez alguma solução com big data possa ajuda com algo na inferência de sugestões que já tenham sido sugeridas anteriormente e já foram levadas em consideração.
