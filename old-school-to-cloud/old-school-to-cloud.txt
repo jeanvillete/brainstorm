@@ -1,7 +1,10 @@
 O que muda do ponto de vista de desenvolvimento (time de arquitetura)?
 - Recursos motivados, trabalhando com tecnologias e cultura de indústria atualizada.
   - Aplicação de DevOps, Continous Integration e Continous Delivery
-- Aplicação de soluções com maior leque de possibilidades, cache com MemCache/Redis, bancos de dados NoSql
+- Aplicação de soluções com maior leque de possibilidades
+  - cache com MemCache/Redis
+  - bancos de dados NoSql
+  - aplicação ou módulos em outras linguagens; javascript, ruby, etc.
 
 Como é hoje um release? Da concepção de uma necessidade (minor, feature, major) até a entrega;
 - Demanda levantada, discutida em reuniões, emails e documentadas
@@ -9,18 +12,21 @@ Como é hoje um release? Da concepção de uma necessidade (minor, feature, majo
   - Metodologias ágeis pedem que todos os envolvidos numa demanda participem e estejam cientes da necessidade, business + dev + ops
 - Desenvolvedores obtém código atual, codificam e testam localmente, logo depois leval solução para ambiente de SIT para integração com outros componentes (outros serviços, Rest, DataBase, etc)
   - Metodologias ágeis pedem que as estórias sejam escritas com critérios de aceite, que por fim direciona bastante os testes mínimos de desenvolvimento e depois em UAT
-- Efetua promoção para UAT de maneira manual, disponibilizando pacote no host, deployando no Application Server, efetuando alterações em filesystem (/logs/..., /interfaces/..., etc.)
+- Efetua promoção para UAT de maneira manual, disponibilizando pacote no host, (via recurso humano Ops ou não) deployando no Application Server, efetuando alterações em filesystem (/logs/..., /interfaces/..., etc.)
   - Error prone; Atividade de provisionamento de recursos e deploy devem ser automatizados.
   - É comum que os desenvolvedores e outros integrantes de IT tenham acesso e façam a promoção para UAT, quanto na verdade isto deveria ser totalmente proibido.
     Em alguns casos, aplicações são atualizadas apenas em UAT e nem passam por SIT, uma vez que o ambiente de SIT é uma verdadeira várzea, terra sem dono. Daí quando pedem para encontrar tal aplicação em SIT é um verdadeiro "Deus nos acuda".
     Infelizmente é fácil entender porque chegamos neste cenário, pois são máquinas compartilhadas entre várias aplicações, com vários recursos provisionados que nunca são devolvidos. E ainda quando sofre replacement de recursos humanos, é perdido bastante conhecimento dos estados das máquinas, uma vez que cada recurso humano que gerencia os hosts, o fazem da sua maneira, mas o recurso humano que chega por ultimo sempre tem medo de "mexer no que tá quieto". Assim é uma das formas de se criar "terra de ninguém".
   - Outra coisa que incomoda é fato dos estados das máquinas e capacidade serem bastante diferentes de ambiente para ambiente, piorando quando SIT é diferente de UAT que é diferente de PROD (e de PROD para DR).
-    Isto leva sempre ao iniciar uma atividade em uma aplicação, solicitar informações de PROD de maneira recorrente, pois nunca dá para confiar nos estados dos vários ambientes. (/interfaces/..., /logs/..., variáveis de ambiente, timezone, OS, etc.)
-- Após testes efetuados pelos usuários, ganhamos sign-off e iniciamos processo de empacotamento (preparação da change)
+    Isto leva sempre ao iniciar uma atividade em uma aplicação, solicitar informações de PROD de maneira recorrente, pois nunca dá para confiar nos estados dos vários ambientes. (/interfaces/..., /logs/..., variáveis de ambiente, timezone, language, daylight save time, OS, etc.)
+- Após testes efetuados pelos usuários, ganhamos sign-off e iniciamos processo de empacotamento manual (preparação da change)
   - Nem precisa mencionar novamente que todo o cuidado deve ser tomado por conta da diferença entre os vários ambientes
-  - Documentamos todos os passos a serem efetuados no servidor de produção VERBALMENTE EM UM .DOC, para um recurso pegar este documento e executar num segundo momento
-    - Double Error Prone; Neste momento há pontos de falha tanto em quem documenta o Deployment Descriptor quanto em quem executa, e sem mencionar quando o recurso de Ops é trocado, o recém chegado naturalmente não é familiarizado com o ambiente ao qual TEM QUE EFETUAR ALTERAÇÕES e que é totalmente factível de cometer errors. Num servidor que é compartilhado com várias aplicações, os riscos são verdadeiramente muito altos.
+  - Documentamos todos os passos a serem efetuados no servidor de produção VERBALMENTE EM UM .DOC (Deployment Descriptor), para um recurso Ops pegar este documento, lê-lo e executar num segundo momento
+    - Double Error Prone; Neste momento há pontos de falha tanto em quem documenta o Deployment Descriptor (fácil esquecer de algo) quanto em quem executa (fácil executar passos indevidos ou não executar algum dos passos), e sem mencionar quando o recurso de Ops é trocado, o recém chegado naturalmente não é familiarizado com o ambiente ao qual TEM QUE EFETUAR ALTERAÇÕES e que é totalmente factível de cometer errors. Num servidor que é compartilhado com várias aplicações, os riscos são verdadeiramente muito altos.
     - É comum neste momento solicitarmos arquivos de produção que precisam ser alterados, pois não temos certeza de como está de fato tais conteúdos em produção (black box)
+    - O release implementado por Ops, altera o ambiente de produção mas o servidor é transparente para outros times (black box), tendo este que confiar apenas que o documento de Deployment Descriptor fora devidamente/integralmente implementado (e que quem o escreveu não tinha colocado todos os passos necessários)
+      - E quando não foi devidamente implementado? E quando Ops esquece de algo ou efetua um erro? Quem consegue validar estas atividades? Não existe "validation" nas implementações nos servidores, um 4Eyes nas atividades de Ops
+      - O estado desejado em produção é definido por aqueles que não implementam a release e nem tem o poder de validar, é bastante contraditório isto
 - Chega no dia do release;
   - fila de changes a serem efetuadas em produção, uma a uma
     - uma change atrasa? as outras ficam aguardando
@@ -28,8 +34,48 @@ Como é hoje um release? Da concepção de uma necessidade (minor, feature, majo
   - qual o momento de levar as alterações para DR?
     - replicação feita para DR de modo manual, isto é inadimissível
 - Num cenário de rollback
-  - o tempo de efetuar as atividades manualmente é muito extenso, tenso/inseguro, oneroso e "error prone"
+  - o tempo de efetuar as atividades manualmente é muito extenso, tenso/inseguro, oneroso e "error prone", sem falar nos cenários de rollback em horário de expediente
   - qual o momento de levar as alterações de um rollback para DR?
     - replicação feita para DR de modo manual, isto é inadimissível
 
 Qual cenário desejado? [Código é documentação, desde de Dev até Ops(deployment)]
+- Demanda levantada, discutida em reuniões, emails e documentadas, ESTÓRIA RESUMIDA ESCRITA, com teor de negócio e solução ténica
+  - Metodologias ágeis pedem que todos os envolvidos numa demanda participem e estejam cientes da necessidade, business + dev + ops
+- Gerencia estórias nas ferramentas JAMA e/ou Confluence
+  - Necessário gerenciamento das demandas nas ferramentas supracitadas afim de manter um histórico das alterações sofridas na aplicação, informando a vida de tal aplicação
+    Isto é importante para não reter conhecimento em recursos humanos, possibilitando que o trabalho possa ser executado por outros que virão
+- Desenvolvedores obtém código corrente do repositório remoto central (bitbucket, github)
+  - codifica localmente e efetua testes com base nos critérios de aceite definidos na estória
+- Concluído codificação, desenvolvedor submete código para repositório central e solicita Pull Request para atividade de Code Review
+  - a aplicação ou o módulo corrente deve ter as definições "Deployment Config" (mencionadas logo abaixo) para o kubernetes/openshift
+- Aprovado o código e por fim o Pull Request, via ferramenta de CI/CD (jenkins ou TeamCity) inicia Pipe responsável por;
+  - efetuar análise de código estática via Sonar Qube
+  - executar testes unitários e de integração
+  - build de artefatos, maven para java, node para javascript, etc., resultando num binário
+  - deployar binário (war, jar, ejb, zip, etc.) com versão específica para o Artifactory, nosso repositório global e central de binários
+  - invocar OpenShift/Fabric via comandos "$ oc" para aplicar/deploy "Deployment Config" em SIT, cujo deverá conter as definições  do artefato recém disponibilizado no Artifactory
+- OpenShift é a solução interna do banco para Cloud, além de efetuar orquestramento de containers Docker via Kubernetes, o openshift fornece uma gama de atividades conhecidos como Builders, que na prática auxilía a criação de imagens docker a serem deployadas (como containers), imbutindo nestas imagens códigos de aplicações java, javascript, etc.
+- Um dos componentes de grande importância dentro do conceito Kubernetes e seu orquestramento fornecido, é o de "Replication Controller", que baseado num objeto sugestivamente denominado "Deployment Config" analisa o estado desejado e especificado no "Deployment Config" e garante que este estado será implementado dentro do Node do Cluster Kubernetes corrente.
+  - O papelo do "Replication Controller" é como o recurso humano Ops que aplicar o estado solicitado no servidor do ambiente em questão (SIT, UAT, PROD, DR), e assim como o recurso humano, o faz com base no documento chamado "Deployment Config".
+    A diferença básica está no fato de o "Replication Controller" executar atividades totalmente automatizadas baseados num documento/objeto "Deployment Config" com linguagem estruturada para execução de uma máquina (processo documentado via código), e ao invés de tentar alterar aplicação em execução (parar Application Server, alterar arquivos de propriedades, etc, etc.), os processos/containers correntes são simplesmente finalizados/mortos e novos processos são iniciados com o novo estado desejado.
+    Resultado, não importa se está sendo efetuado um deploy do zero, ou aplicando a change em uma aplicação/módulo já existente, a aplicação ou conjunto de módulos estará no ar em segundos.
+  - Uma vez feliz com SIT, uma outra pessoa (não mais o desenvolvedor) pode solicitar realização da promoção de SIT para UAT
+  - Usuários efetuam testes de UAT, documentam os testes em ferramenta como ALM
+  - Usuários dão o sign-off para time de TI
+  - No dia planejado para a change/release, o time de TI (não mais o desenvolvedor) via console web do openshift, promove aplicação/módulo de UAT para PROD
+
+Vantagens do cenário desejado
+- Melhor que ter processos documentados verbalmente (geralmente longos), é ter processos automatizados (amplamente utilizados na indústria) "documentos por códigos"
+  - Pipes no Jenkins, e Deployment Configs para o kubernetes/openshift/fabric, dizem via código como é esperado que tal aplicação seja deployada
+- Deploy e promoções dentre os vários ambientes, ou seja, SIT para UAT, UAT para PROD, etc, além de muito rápido, seja integro
+  - o quesito rápido promete eliminar gastos absurdos com horas extras em deploys/releases, DR ou rollback
+  - o quesito integro, garante a replicação e promoção exata da aplicação, sem medo de que alterações em ambientes superiores (PROD) tenha sido feito sem que os ambientes inferiores tenham sido notificados; UAT reflete SIT, PROD reflete UAT (não mais ambientes como black boxes)
+- Aplicações desenvolvidas neste cenário de imagens e containers, vivem naturalmente isoladas, tendo todas as variáveis de ambientes e parâmetros definidas para tal aplicação, e como a imagem docker é um artefato imutável, variáveis de ambiente (com valores diferentes para cada ambiente, é lógico), timezone, language, daylight save time, OS, etc., são todos processos parametrizados iguais.
+  - aplicação de uma change/release, rollback, DR, etc., nunca impacta outras aplicações (máxima de desenvolvimento de software OOP, baixo acoplamento e alta coesão)
+- Operações de deploy/change/release, rollback, DR, etc., ocorrem em paralelo
+  - nada de fila de change onde todos aguardam um recurso Ops
+
+OpenShift/Fabric; Limitações imediatas [Don't move your application in a "big bang" fashion, Fabric is ideal for microservices-based architectures, but monolithic architectures don't map well on Fabric]
+- Aplicações precisam serem escritas no modelo 12 Factors; https://12factor.net/
+- Aplicações devem ser desenvolvidas obtendo comunicações via exposição/consumo de serviços RESTful (não faça integração entre diferentes aplicações via base de dados, nem filesystem, nem nenhuma outra maneira que exponha mais do que contratos web, pois aplicações não podem conhecer detalhes de outras, justamente para atender a máxima do baixo acoplamento e alta coesão)
+  - Se uma aplicação A se comunica com outra B, fazendo integração via base de dados, onde no cenário hipotético a aplicação A escreve ou lê da base de dados da aplicação B, a aplicação B está fadada a não poder evoluir sua estrutura de dados, nem mesmo podendo trocar de um banco de dados RDBMS para uma solução NoSql, por exemplo.
