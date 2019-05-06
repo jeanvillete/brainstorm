@@ -1,0 +1,33 @@
+Spring Boot is the tool provided by the Pivotal (sponsor of spring tool suite) for helping people get ready with projects up and running in a fast fashion.
+To do so, the Spring Boot project provides the spring initializer which can used online, available on the URI "http://start.spring.io/" or via a command line tool, but the online version looks like better in the sense it is always up to date.
+
+When starting a new project, specially for backend processing, thinking on RESTFul services is something which comes very soon.
+So browse to "http://start.spring.io/" and select the initializer with the Build tool (Maven) and the desired language (Java), provide it a maven group alongside an artifact id, so from the list of dependencies, get all the starters which makes sense, so then click "Generate Project" to download the skeleton/base project.
+
+Baby steps;
+- generate the skeleton project from the online tool; http://start.spring.io/
+  - provide a meaningfull group and artifact id
+  - select only the "Web" dependencie/starter
+  - pom.xml with the starters; spring-boot-starter-web, spring-boot-starter-test(scope=test)
+- start the project to check whether it is getting up successfully; $ mvn spring-boot:run
+- add jpa/database capability;
+  - add dependency for the starter; spring-boot-starter-data-jpa
+    - it gives the ability for;
+      - jdbc capabilities
+      - Spring JDBC
+      - jpa with hibernate
+  - it must be provided the jdbc driver for the database, for example; com.h2database:h2
+- start the project to check whether it is getting up successfully; $ mvn spring-boot:run
+- add devtools starter for facilities provided on "dev time", such as synchronization of artifacts (static or Java/dynamic ones) while they are being edited/developed; spring-boot-devtools
+  - devtools is really a nice feature provided by Spring Boot which under the hoods, detects that the server is being loaded on "dev mode" (based on spring profiles), so based on that, spring loads different JVM for the server (e.g; Tomcat), and a separated classloaders for the libraries and another for application which holds the code being developed, so this way, whenever the code changes, the classloader for the application is basically reloaded getting the resulting rendered application up to date all the time, so there's no need to restart the server on each change, and that is the feature the developer needs.
+    this mentioned behaviour is only for dev time
+- start the project to check whether it is getting up successfully; $ mvn spring-boot:run
+- begin the implementation with the artifacts which belongs to the application, Domains/Entities/Pojos, Services, Repositories, Controllers, etc.
+  - business logic
+  - data accesses
+  - endpoints
+  - GUI
+- add non-functional requirements
+  - spring security; spring-boot-starter-security
+  - spring boot actuator; spring-boot-starter-actuator
+  - define specific properties and values for each environment
