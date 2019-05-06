@@ -31,3 +31,49 @@ Baby steps;
   - spring security; spring-boot-starter-security
   - spring boot actuator; spring-boot-starter-actuator
   - define specific properties and values for each environment
+    - check the details of each considered environment and set their properties and values, such as matrics with spring actuator, roles for spring security, etc.
+
+Glossary;
+[spring boot actuator]
+  Spring Boot Actuators are well known for "production-ready features", and it means that some features that are supposed to be implemented by some developers of application are already available to these applications which makes use of this "dependency/library", which can be refered also to as spring boot starter.
+  The aforementioned "production-ready features" are most of the time related to "monitoring" the application (whether the application and it's components are up and running), gather metrics, etc. Understanding traffic or the state of our database becomes trivial with this dependency.
+  Imagine we could by means of spring boot actuator terminate our app or change its logging configurations, it is hugely powerfull and so cool.
+  ...
+    - https://www.baeldung.com/spring-boot-actuators - 
+    The main benefit of this library is that we can get production grade tools without having to actually implement these features ourselves.
+    Actuator is mainly used to expose operation information about the running application - health, metrics, info, dump, env, etc. It uses HTTP endpoints or JMX beans to enable us to interact with it.
+  ...
+  If we would develop this kind of features ourselves, we would implement something like JMX beans and endpoints to show both metrics and that our app still alive, but now Spring Boot does this out of the box, in a standard way which is even better.
+  ...
+    - https://www.baeldung.com/spring-boot-actuators - 
+    Most common endpoints provided out of the box;
+	    /auditevents – lists security audit-related events such as user login/logout. Also, we can filter by principal or type among others fields
+	    /beans – returns all available beans in our BeanFactory. Unlike /auditevents, it doesn’t support filtering
+	    /conditions – formerly known as /autoconfig, builds a report of conditions around auto-configuration
+	    /configprops – allows us to fetch all @ConfigurationProperties beans
+	    /env – returns the current environment properties. Additionally, we can retrieve single properties
+	    /flyway – provides details about our Flyway database migrations
+	    /health – summarises the health status of our application
+	    /heapdump – builds and returns a heap dump from the JVM used by our application
+	    /info – returns general information. It might be custom data, build information or details about the latest commit
+	    /liquibase – behaves like /flyway but for Liquibase
+	    /logfile – returns ordinary application logs
+	    /loggers – enables us to query and modify the logging level of our application
+	    /metrics – details metrics of our application. This might include generic metrics as well as custom ones
+	    /prometheus – returns metrics like the previous one, but formatted to work with a Prometheus server
+	    /scheduledtasks – provides details about every scheduled task within our application
+	    /sessions – lists HTTP sessions given we are using Spring Session
+	    /shutdown – performs a graceful shutdown of the application
+	    /threaddump – dumps the thread information of the underlying JVM
+    We can find the full list of existing endpoints over; http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints
+  ...
+  Rich documentation for spring boot actuator, such as "retrieving and changing configurations for loggings"; https://docs.spring.io/spring-boot/docs/2.0.x/actuator-api/html/
+  More on the topic; https://dzone.com/articles/magic-with-spring-boot-actuator
+    <Magic #1: the Base Path Can Be Changed>
+    <Magic #2: Health of the Application>
+    <Magic #3: Custom Health Indicators>
+    <Magic #4: Application Information With Info>
+    <Magic #5: Metrics About the Application Environment>
+
+[spring boot devtools]
+[spring boot starters]
