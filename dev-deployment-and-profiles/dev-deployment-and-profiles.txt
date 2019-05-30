@@ -1,0 +1,37 @@
+Definição de profiles aqui, reflete tanto a nível de projeto "maven" (pom.xml) quanto na utilização do Spring Framework.
+
+profile; <dev-local>
+- quando desenvolvo localmente;
+  - eu necessito (normalmente) de uma única instância do serviço no ar; normalmente um servidor web (e.g; tomcat, jetty)
+  - não preciso de segurança validada em recursos externos, e.g; banco de dados ou external providers
+  - não preciso de utilizar uma base de dados real, num serviço dedicado rodando, mas sim uma base de dados em memória como H2
+    - se conseguir com que bibliotecas como JPA deixe transparente as bases de dados, sem comprometer a aplicação, então eu consigo não necessitar da base de dados real em desenvolvimento
+    - se não for possível a transparência total, mas houver necessidades de queries nativas ou algo do gênero, que seja específico da base de dados, então será sim necessário a base de dados real, dedicada
+- testes unitários;
+  - testes unitários devem considerar o profile <dev-local>, com todos os componentes externos mascarados (mocked), desde bancos de dados, external rest/soap services, etc.
+    - isto permite o mínimo necessário instalado (JDK, maven) numa máquina para testar e então "build up" a aplicação em questão.
+    - NUNCA, NUNCA, NUNCA faça referência a file system (arquivos, driver de SO) que não necessariamente exista na máquina de um terceiro.
+  - os testes unitários ajudam a provar;
+    - "code quality metrics" com coberturas de testes; é a garantia que um desenvolvedor pensou ou não em determinados cenários
+    - mostrar quais os cenários foram considerados com devidos testes pelo desenvovedor
+    - documentado via código versionado quais os parâmetros o desenvolvedor utilizou para testes, dando uma base do quanto algo foi estressado a nível de fornecimento de informações diversas
+    - ao expôr REST/Web Services, considere como testes unitários requisições a serem disparadas com parâmetros para casos de sucesso, erro e validações, que foram implementadas e sim, devem constar nos testes
+    - não gaste tempo implementando testes de integração em testes unitários; gaste tempo implementando testes de integração, que não deverá ter o profile <dev-local>
+    - não implemente testes unitários para componentes de terceiros, frameworks, ou componentes como bancos de dados, comunicação com serviços reais que supostamente deveriam estar expostos em endereços X,Y ou Z
+  - implemente testes unitários que delimitam escopos claros de regras de negócio, dando a entender bem de onde a onde (de qual ponto a qual ponto) se espera testar a regra de negócios
+    - vale a pena testar Controller/Rest sendo expostos imitando requisições de clientes reais
+    - não vale a pena testar Repository que não tem nenhuma regra (validação, if, etc.) mas simplesmente faz uma query na base de dados
+    - se você tem uma entrada para um ponto da aplicação (método main, um Service, Componente, Repository, etc.) que é complexo, inicie pelo teste unitário, deixe a entrada de exemplo versionada, e implemente aos poucos (step babies) a regra, pois isto além de você chegar no resultado esperado, você vai ajudar a outras pessoas futuras a entender porque a solução fora implementada da maneira que está
+
+profile; <integration-testing>
+- neste cenário, deve-se considerar grande parte dos componentes externos como dependências
+  - não precisam ser necessariamente os componentes reais, por exemplo, não precisa ser a base de dados dedicado de UAT, ou o REST Service do time externo servido para SIT ou UAT
+- uma boa solução para aplicação dos testes de integração é fazendo utilização de containers, como por exemplo, a utilização de um "docker-compose" pode vir muito a calhar
+  - a instânciação dos containers e seus respectivos serviços, banco de dados, Redis, MongoDB, e os próprios componentes da aplicação em questão (jar, war) são facilmente manipuláveis a fim de criar um cenário controlado
+- tenha scripts que façam os testes de integração;
+  - idealmente, desenvolva scripts "bash" para os cenários a serem testados
+  - suba todos os containers, e quando tudo estiver no ar, invoke a execução do script para testes
+- é ideal que neste ponto o código tenha sido desenvolvido, versionado e os respectivos artefatos resultantes, war, jar, estejam disponíveis em algum "binary repository" (o próprio GitHub já oferece este serviço)
+  - sendo assim, as imagens docker a serem criadas e que devem conter, e posteriormente executar o passivo war/jar, devem fazer download do artefato resultante do "binary repository", construir a imagem docker, ou o conjunto de imagens, caso a aplicação seja dividida em vários módulos, e só então o "docker-compose" deveria subir as imagens desejadas, até a execução dos testes via o script.
+- a periodicidade da execução dos testes de integração, devem ser entre tempos maiores, uma vez que é normal que este seja mais longo que a simples execução dos "testes unitários"
+  - pode se colocar por exemplo para execuções entre duas ou três vezes por dia, ou com invocações manuais, quando se desejar
