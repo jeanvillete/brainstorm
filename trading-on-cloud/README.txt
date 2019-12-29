@@ -1,0 +1,46 @@
+O objetivo deste documento e seus filhos/irmãos, é apresentar o domínio das informações a serem tratadas e definir uma solução que permita armazenar e representar negócios (Trades) efetuados na bolsa de valores, que são por último trafegados via fix-protocol aos clientes (corretoras) da bolsa.
+
+Legenda;
+* Bolsas de Valores; São responsáveis por cadastrar os participantes do mercado, e intermediar os desejos de negociações (venda ou compra) entre estes participantes, além de garantir as entregas das negociações, ou seja, o dinheiro para quem vendeu a ação e a transferência legal do PAPEL para o comprador.
+* BOV; Bolsa de Valores de São Paulo; Mercado para negociação de Ações/PAPEIS de uma empresa, ou seja, os investidores se tornam sócios de pequenas parcelas da empresa ao adquirir um PAPEL, mas pode vender este PAPEL para outro investidor através deste mercado.
+* BM&F; Bolsa de Mercadorias e Futuros; Mercado para negociação de contratos, commodities através de derivativos agrícolas e ativos financeiros, como taxas de juros, câmbio, e também através de títulos e índices.
+* B3; Brasil, Bolsa Balcão; A sigla B3 é resultante da junção das empresas "Bolsa de Valores de São Paulo", "Bolsa de Mercadorias e Futuros" e a CETIP (Central de Custódia e Liquidação de Títulos). Mesmo sendo uma única Bolsa (como uma única empresa), elas continuam atuando nos diferentes segmentos.
+* Papeis (ações/istrumentos); Papeis são de alguma maneira, uma pedaço legal de uma empresa, onde o dententor deste papel tem direitos e deveres para com esta empresa. Um papel é emitido em nome da empresa e negociado no mercado, e para facilitar as referências da empreas, os PAPEIS tem uma espécie de apelido, por exemplo, para empresa "Vale S.A." há o apelido "VALE3". Para empresa "Petroleo Brasileiro SA Petrobras" os apelidos para diferentes PAPEIS "PETR3" e "PETR4".
+* Corretoras são geralmente os agentes licenciados na bolsa de valores, que podem emitir Ordens em prol de seus clientes. Normalmente as Ordens são emitidas pelos operadores da mesa de negociação da corretora.
+  ** DMA (Direct Market Access) é uma modalidade oferecida pela corretora, onde permite que o seu cliente tenha acesso ao mercado (mercado de ações, por exemplo) e possa tanto visualizar produtos quanto emitir Ordens em seu favor, sem a necessidade de um operador da mesa.
+  ** Um dos papeis cruciais dentro da corretora, além de efetuar compras e vendas de PAPEIS, é o de distribuir tais PAPEIS/ações de maneira justa para os seus clientes, pois normalmente a corretora compra os vários PAPEIS/ações em lotes, e após concretizado tais negócios, a corretora, através do time de backoffice, tem a responsabilidade de aplicar distribuições para os clientes finais, onde isto ocorre em eventos determinados como alocações, e se dão em contas intermediárias ou dos clientes finais.
+* Trading; Momento em que os operadores (frontoffice) estão trabalhando na mesa, ofertando compras e vendas das ações através da emissão de Ordens.
+* Pós Trading; Momento em que negócios já foram realizados (concretizados), e as informações destes negócios/Trades chegam nas corretoras, para permitir que o pessoal de backoffice da corretora possa distribuir as negociações para as contas dos clientes finais.
+
+Fatos, teoremas e requisitos;
+* Ordens refere-se ao ato da submissão de intenção de uma pessoa/máquina (algoritmos, DMA) de comprar ou vender PAPEIS. Não necessáriamente toda ordem é efetivada, pode ser que apenas uma parte de tal ordem tenha "matches", e que geram negócios (Trades), ou pior ainda, é uma Ordem de venda com valor tão alto que ninguém oferte um valor para comprá-la, ou uma Ordem de compra com valor tão baixo que ninguém tem intenção de vender neste valor, fazendo com que tal Ordem não gere nenhuma negociação/Trade.
+  ** Quando negócios são efetivados, as informações das Trades que chegam para as corretoras através do "protocolo fix", informam do Trade qual o valor/preço, a quantidade, qual a quantidade que foi solicitada na Ordem, a quantidade que já foi negociada anteriormente, e a quantidade que falta a ser negociada da Ordem.
+* Trades são resultantes de "matches" (acordos ou negócios fechados) entre pessoas/máquinas (algoritmos, DMA) que detém e querem vender PAPEIS e pessoas/máquinas (algoritmos) que tem interesse em adquirir tais PAPEIS.
+* Contas; // TODO
+  ** Contas de execução; // TODO
+  ** Contas de alocação; // TODO
+  ** Tipos de Contas; // TODO
+    *** AdminCon; // TODO
+    *** Master; // TODO
+      **** Master com filha; // TODO
+      **** Master sem filha; // TODO
+    *** Normal; // TODO
+      **** Normal com master; // TODO
+      **** Normal sem master; // TODO
+    *** Erro; // TODO
+* Alocações; // TODO
+  ** Troca; // TODO
+  ** Quebra/Desdobro; // TODO
+  ** Indicação de AdminCon; // TODO
+  ** Distribuição; // TODO
+* Repasses; // TODO
+  ** Repasse de recebimento; // TODO
+  ** Repasse de envio; // TODO
+
+---
+
+Estrutura e representação de dados;
+Se faz necessário uma estrutura de dados que possibilite representar informações de Trades, além dos eventos de alocações subsequentes.
+  - Provavelmente uma estrutura em árvore seja uma boa pedida para representação das Trades e suas pernas, onde cada nó (nós) são os estados gerados, e as arestas que ligam os nós são os eventos que ocorream sobre tal Trade/Perna.
+    -- Alguns eventos, em especial aqueles de Alocações e de Repasse precisam de confirmação para tomarem efeitos, ou seja, existe um par de evento chamado de requisição e resposta, onde somente quando chega a resposta com status de sucesso é que o tal evento toma efeito na Trade/perna gerando outras pernas (Trade alterada).
+  - Importante que esta estrutura possa ser apresentada num modelo de auditoria, mostrando o que ocorreu ou alterou na vida da Trade, ou suas pernas, quando eventos de alocação foram lançados sobre ela (Trade).
