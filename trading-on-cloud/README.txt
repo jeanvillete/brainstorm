@@ -16,10 +16,14 @@ Fatos, teoremas e requisitos;
 * Ordens refere-se ao ato da submissão de intenção de uma pessoa/máquina (algoritmos, DMA) de comprar ou vender PAPEIS. Não necessáriamente toda ordem é efetivada, pode ser que apenas uma parte de tal ordem tenha "matches", e que geram negócios (Trades), ou pior ainda, é uma Ordem de venda com valor tão alto que ninguém oferte um valor para comprá-la, ou uma Ordem de compra com valor tão baixo que ninguém tem intenção de vender neste valor, fazendo com que tal Ordem não gere nenhuma negociação/Trade.
   ** Quando negócios são efetivados, as informações das Trades que chegam para as corretoras através do "protocolo fix", informam do Trade qual o valor/preço, a quantidade, qual a quantidade que foi solicitada na Ordem, a quantidade que já foi negociada anteriormente, e a quantidade que falta a ser negociada da Ordem.
 * Trades são resultantes de "matches" (acordos ou negócios fechados) entre pessoas/máquinas (algoritmos, DMA) que detém e querem vender PAPEIS e pessoas/máquinas (algoritmos) que tem interesse em adquirir tais PAPEIS.
-* Contas; // TODO
-  ** Contas de execução; // TODO
-  ** Contas de alocação; // TODO
-  ** Tipos de Contas; // TODO
+
+Contas e Alocações;
+As corretoras, em especial as grandes que operam em favor de muitos clientes, visando sempre uma melhor performance, compram ou vendem em grandes lotes, ou seja, negócios são realizados para vários clientes de uma única vez. Imagine então que os clientes João, Maria e José, ambos desejam adquirir PAPEIS da Petrobrás, respectivamente 5000, 7000 e 3000. A corretora emite uma ORDEM de compra de 15000 destes PAPEIS a um determinado preço. Neste cenário hipotético, 3 negócios são efetuados, sendo; Primeiro negócio com 6000 PAPEIS a 29,67, segundo negócio com 3500 PAPEIS a 29,84 e um terceiro negócio com 4000 a 29,98, totalizando assim 13500 PAPEIS comprados, porém ficou faltando adquirir 1500 PAPEIS. A corretora tem por dever e obrigação DISTRIBUIR igualmente entre os CLIENTES os PAPEIS adquiridos, proporcionalmente as quantidades e os valores obtidos. Aqui entra então dois conceitos/domínios muito importantes, que são as CONTAS utilizadas pela corretora e as ALOCAÇÕES/operações efetuadas nas Trades/Negócios.
+* Contas; As contas são atribuídas aos negócios/Trades e permitem aos operadores saberem onde se encontram e o que deve ser feito nestas Trades até que as mesmas sejam DISTRIBUÍDAS aos clientes finais.
+  ** Contas de execução; As contas de execução na Trade ajudam a representar o estado da Trade no sentido de qual conta e seu tipo a Trade se encontra e para onde a mesma pode ir. Há algumas operações de ALOCAÇÃO que podem alterar esta CONTA na Trade, como TROCA, QUEBRA/DESDOBRO e INDICAÇÃO DE ADMINCON. Junto com outras informações da Trade, a CONTA de execução é fundamental para extrair relatórios e agrupamentos do estado dos negócios num período de tempo, e.g; PREÇO MÉDIO de hoje, ontem, etc.
+  ** Contas de alocação; As contas de alocação na Trade ajudam a representar o estado da Trade no sentido de qual conta e seu tipo a Trade se encontra e para onde a mesma pode ir. Há algumas operações de ALOCAÇÃO que podem alterar esta CONTA na Trade, como TROCA, QUEBRA/DESDOBRO, INDICAÇÃO DE ADMINCON e por fim a DISTRIBUIÇÃO. Junto com outras informações da Trade, a CONTA de execução é fundamental para extrair relatórios e agrupamentos do estado dos negócios num período de tempo, e.g; ORDENS e CONSOLIDADOS POR PAPEL de hoje, ontem, etc.
+  ** Tipos de Contas;
+    *** Contas de captura; // TODO
     *** AdminCon; // TODO
     *** Master; // TODO
       **** Master com filha; // TODO
@@ -29,10 +33,10 @@ Fatos, teoremas e requisitos;
       **** Normal sem master; // TODO
     *** Erro; // TODO
 * Alocações; // TODO
-  ** Troca; // TODO
-  ** Quebra/Desdobro; // TODO
-  ** Indicação de AdminCon; // TODO
-  ** Distribuição; // TODO
+  ** Troca; Este tipo de ALOCAÇÃO refere-se literalmente ao ato de TROCAR as CONTAS de ALOCAÇÃO e EXECUÇÃO da Trade. // TODO, delimitar as regras, de quais contas para quais contas TROCAS podem ser efetuadas
+  ** Quebra/Desdobro; // TODO // TODO, delimitar as regras, de quais contas para quais contas QUEBRAS/DESDOBROS podem ser efetuadas
+  ** Indicação de AdminCon; // TODO // TODO, delimitar as regras, de quais contas para quais contas INDICAÇÃO DE ADMINCON podem ser efetuadas
+  ** Distribuição; // TODO // TODO, delimitar as regras, de quais contas para quais contas DISTRIBUIÇÃO podem ser efetuadas
 * Repasses; // TODO
   ** Repasse de recebimento; // TODO
   ** Repasse de envio; // TODO
