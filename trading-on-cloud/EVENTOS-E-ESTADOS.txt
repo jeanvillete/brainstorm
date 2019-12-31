@@ -1,0 +1,12 @@
+Funcionalidades desejáveis;
+  - Deve ser possível fornecer filtros para payloads/mensagens/negócios/trades não desejadas. A falta do filtro indica que o payload deve entrar na estrutura de armazenamento, representação e reações.
+
+Requisitos e definições;
+  - Eventos são necessários para alteração dos estados, e somente através dos eventos tais estados podem ser alterados.
+    * Evento de captura provavelmente apenas inicia um Estado, pois não deveria existir nada até este momento. Uma única representação da Trade existe até este momento.
+    * Evento de "notificação de uma perna", indica que uma perna/Trade de uma Ordem foi de fato efetivada (compra/venda), e tem valor legal da venda ou compra, dependendo do ponto de referência (você é comprador ou vendedor?). Uma única representação da Trade existe até este momento.
+    * Eventos de alocações, dependendo do evento, podem alterar, conta de alocação, conta de execução e quantidade, além de geralmente representar mais de um item na saída da reação ao Evento.
+        #Evento Alocação, TROCA; Dada Trades/Pernas com determinada conta, a TROCA altera as contas de alocação e execução. A saída deve ser as mesmas Trades/Pernas que entraram, porém com as contas de alocação e execução alteradas.
+        #Evento Alocação, INDICAÇÃO ADMINCON; Dada Trade/Perna (no singular mesmo) com determinada conta, a INDICAÇÃO ADMINCON altera as contas de alocação e execução. A saída deve ser "N Trades/Pernas" com as contas de alocação e execução, e a quantidade (para cada conta) alteradas.
+        #Evento Alocação, QUEBRA/DESDOBRO; Data específicas Trades/Pernas (escolhidas pelo usuário), altera-se as informações, quantidade, conta de alocação e conta de execução. A saída será as "N Trades/Pernas" acrescido de mais um Trade/Perna, para cada que fora QUEBRADA/DESDOBRADA. 
+        #Evento Alocação, DISTRIBUIÇÃO; Dada Trades/Pernas com determinada conta, a DISTRIBUIÇÃO altera as informações quantidade e conta de alocação. A saída são "N Trades/Pernas" com as contas de alocação e quantidade (para cada conta) alteradas.
