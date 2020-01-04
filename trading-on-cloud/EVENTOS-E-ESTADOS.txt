@@ -1,5 +1,5 @@
 Funcionalidades desejáveis;
-  - Deve ser possível fornecer filtros para payloads/mensagens/negócios/trades não desejadas. A falta do filtro indica que o payload deve entrar na estrutura de armazenamento, representação e reações.
+  - Deve ser possível fornecer filtros para payloads/mensagens/negócios/trades não desejadas. A falta do filtro indica que o payload deve entrar na estrutura de armazenamento, representação, reações e por ultimo as as invocações das Triggers para os Handlers fornecidos.
 
 Requisitos e definições;
   - Eventos são necessários para alteração dos estados, e somente através dos eventos tais estados podem ser alterados.
@@ -10,3 +10,4 @@ Requisitos e definições;
         #Evento Alocação, INDICAÇÃO ADMINCON; Dada Trade/Perna (no singular mesmo) com determinada conta, a INDICAÇÃO ADMINCON altera as contas de alocação e execução. A saída deve ser "N Trades/Pernas" com as contas de alocação e execução, e a quantidade (para cada conta) alteradas.
         #Evento Alocação, QUEBRA/DESDOBRO; Data específicas Trades/Pernas (escolhidas pelo usuário), altera-se as informações, quantidade, conta de alocação e conta de execução. A saída será as "N Trades/Pernas" acrescido de mais um Trade/Perna, para cada que fora QUEBRADA/DESDOBRADA. 
         #Evento Alocação, DISTRIBUIÇÃO; Dada Trades/Pernas com determinada conta, a DISTRIBUIÇÃO altera as informações quantidade e conta de alocação. A saída são "N Trades/Pernas" com as contas de alocação e quantidade (para cada conta) alteradas.
+  - Um único evento, pode ser aplicado a diversos nós (Trades/Pernas) de uma única vez, então deve ser possível fornecer no evento um Predicado que indique a quais nós (Trades/Pernas) o evento deve ser aplicado/reagido.
