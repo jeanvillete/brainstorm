@@ -1,0 +1,12 @@
+TODO; duas coisas;
+  - Eventos deverão ter uma lista de Objetos que declarem; (anteriormente eu tinha pensado num único item/Objeto que deveria ser composto como abaixo, mas na verdade, deve ser uma lista/set)
+    - Predicado; a quais Trades/Pernas/Nós deve ser aplicado/reagido
+    - Update Command; definição de quais campos devem ser atualizados, juntos com os devidos valores
+  - Atualizar exemplos (testes de mesa), pois eu tinha colocado que para "Indicação de AdminCon", "Quebra/Desdobro" e "Distribuição", eu estava fazendo os devidos cálculos de porcentagem de quantidades que deveria ser tirada de cada Trade, mas o correto é que para os Eventos e Estados, os Eventos devem chegar já com estas informações definidas, e a máquina de Eventos e Estados apenas aplica as alterações, gerando possivelmente novas pernas (se necessário).
+
+
+---
+
+Talvez fosse interessante começar a desenhar as interfaces Java que a implementação da estrutura de eventos e estados devesse implementar. A ideia é que fosse possível implementar mais de uma estrutura/abordagem, a apresentasse os ganhos de uma utilização sobre a outra.
+  e.g 1; A primeira implementação deve atender uma estrutura em árvore, onde a idéia é que embora sejam criados Trades/Pernas/Nós com base em outras, todas as Trades/Pernas/Nós existentes continuem co-existindo, mesmo que um evento já tenha sido executado sob uma Perna/Trade/Nó. Isto tem o "contra" de utilização de bastante memória, uma vez que toda a estrutura sempre estará completa. A parte boa desta abordagem é que não se deve preocupar com muitos cálculos/inferências computacionais para se obter/filtrar dados, pois está tudo sempre a mão.
+  e.g 2; Uma outra abordagem seria manter apenas os elementos folha (Trade/Perna/Nó) em memória, e se fosse necessário fazer buscas por estados anteriores, então deveria refazer cálculos na estrutura (Eventos/Estados), para então permitir descobrir a história/histórico das reações, para descrever o motivo do estado estar como está. Em outras palavras, para se obter informações de auditoria por exemplo, seria mais complicado utilizar esta abordagem.

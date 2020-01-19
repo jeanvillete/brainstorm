@@ -1,0 +1,7 @@
+- Ganho em ter os agrupamentos sempre prontos
+  -- Ao efetuarmos sempre os agrupamentos, e os filtros/buscas devendo ser em cima da estrutura pronta (agrupada) evitamos o problema da decisão "o que deve ser filtrado nas Trades/Nós e o que deve ser filtrado na estrutura agruapada"? A ideia é que como o agrupamento é efetuado a priori, então sempre a busca/filtro será feita as informções agrupadas.
+    --- Havia uma discussão entre o que era importante deixar filtrar nas Trades/Nós antes de efetuar o agrupamento, e o que deveria ser deixado agrupar antes para depois aplicar filtros/buscas. O ponto disto é que no modelo em que se busca/filtra pelas Trades/Nós, isto coloca uma complexidade a ser decida sobre performance. O que esta performance não deve ser questionada no modelo onde o agrupamento é efetuado a priori.
+
+- Protocolo FIX;
+  -- Quando comunica com a bolsa (B3), é necessário fornecer userId, password e o nome do sistema (nome da aplicação). Este nome da aplicação/sistema não é comumente solicitado em outras conexões FIX.
+  -- Aquele que abre comunicação utilizando o protocolo FIX, deve fornecer possibilidade de "retry", ou seja, caso a conexão seja pertida por qualquer motivo, deve tentar abrir conexão novamente, enquanto o processo deste cliente estiver sendo executado.

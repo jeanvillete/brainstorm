@@ -1,5 +1,6 @@
 Funcionalidades desejáveis;
   - Deve ser possível fornecer filtros para payloads/mensagens/negócios/trades não desejadas. A falta do filtro indica que o payload deve entrar na estrutura de armazenamento, representação, reações e por ultimo as as invocações das Triggers para os Handlers fornecidos.
+  - Quando obtido um determinado agrupamento, no componente cliente do "trading-on-cloud-core", este deve possibilitar recuperar e apresentar algumas informações das Trades/negócios/nós que formam este agrupamento, ou seja, as Trades de uma Ordem ou de um Consolidado por Papel.
 
 Requisitos e definições;
   - Eventos são necessários para alteração dos estados, e somente através dos eventos tais estados podem ser alterados.
