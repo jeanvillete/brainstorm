@@ -1,0 +1,54 @@
+[COMPOSIÇÃO DE EVENTOS E ESTADOS]
+
+Funcionalidades desejáveis;
+  - Deve ser possível fornecer filtros para payloads/mensagens/negócios/trades não desejadas. A falta do filtro indica que o payload deve entrar na estrutura de armazenamento, representação, reações e por ultimo as as invocações das Triggers para os Handlers fornecidos.
+  - Quando obtido um determinado agrupamento, no componente cliente do "trading-on-cloud-core", este deve possibilitar recuperar e apresentar algumas informações das Trades/negócios/nós que formam este agrupamento, ou seja, as Trades de uma Ordem ou de um Consolidado por Papel.
+
+Requisitos e definições;
+  - Eventos são necessários para alteração dos estados, e somente através dos eventos tais estados podem ser alterados.
+    * Evento de captura provavelmente apenas inicia um Estado, pois não deveria existir nada até este momento. Uma única representação da Trade existe até este momento.
+    * Evento de "notificação de uma perna", indica que uma perna/Trade de uma Ordem foi de fato efetivada (compra/venda), e tem valor legal da venda ou compra, dependendo do ponto de referência (você é comprador ou vendedor?). Uma única representação da Trade existe até este momento.
+    * Eventos de alocações, dependendo do evento, podem alterar, conta de alocação, conta de execução e quantidade, além de geralmente representar mais de um item na saída da reação ao Evento.
+        #Evento Alocação, TROCA; Dada Trades/Pernas com determinada conta, a TROCA altera as contas de alocação e execução. A saída deve ser as mesmas Trades/Pernas que entraram, porém com as contas de alocação e execução alteradas.
+        #Evento Alocação, INDICAÇÃO ADMINCON; Dada Trade/Perna (no singular mesmo) com determinada conta, a INDICAÇÃO ADMINCON altera as contas de alocação e execução. A saída deve ser "N Trades/Pernas" com as contas de alocação e execução, e a quantidade (para cada conta) alteradas.
+        #Evento Alocação, QUEBRA/DESDOBRO; Data específicas Trades/Pernas (escolhidas pelo usuário), altera-se as informações, quantidade, conta de alocação e conta de execução. A saída será as "N Trades/Pernas" acrescido de mais um Trade/Perna, para cada que fora QUEBRADA/DESDOBRADA. 
+        #Evento Alocação, DISTRIBUIÇÃO; Dada Trades/Pernas com determinada conta, a DISTRIBUIÇÃO altera as informações quantidade e conta de alocação. A saída são "N Trades/Pernas" com as contas de alocação e quantidade (para cada conta) alteradas.
+  - Um único evento, pode ser aplicado a diversos nós (Trades/Pernas) de uma única vez, então deve ser possível fornecer no evento um Predicado que indique a quais nós (Trades/Pernas) o evento deve ser aplicado/reagido.
+
+---
+
+[REPRESENTAÇÃO DOS DADOS]
+
+Estrutura e representação de dados;
+Se faz necessário uma estrutura de dados que possibilite representar informações de Trades, além dos eventos de alocações subsequentes.
+  - Provavelmente uma estrutura em árvore seja uma boa pedida para representação das Trades e suas pernas, onde cada nó (nós) são os estados gerados, e as arestas que ligam os nós são os eventos que ocorream sobre tal Trade/Perna.
+    -- Alguns eventos, em especial aqueles de Alocações e de Repasse precisam de confirmação para tomarem efeitos, ou seja, existe um par de evento chamado de requisição e resposta, onde somente quando chega a resposta com status de sucesso é que o tal evento toma efeito na Trade/perna gerando outras pernas (Trade alterada).
+  - Importante que esta estrutura possa ser apresentada num modelo de auditoria, mostrando o que ocorreu ou alterou na vida da Trade, ou suas pernas, quando eventos de alocação foram lançados sobre ela (Trade).
+
+---
+
+Notas;
+
+- Ganho em ter os agrupamentos sempre prontos
+  -- Ao efetuarmos sempre os agrupamentos, e os filtros/buscas devendo ser em cima da estrutura pronta (agrupada) evitamos o problema da decisão "o que deve ser filtrado nas Trades/Nós e o que deve ser filtrado na estrutura agruapada"? A ideia é que como o agrupamento é efetuado a priori, então sempre a busca/filtro será feita as informções agrupadas.
+    --- Havia uma discussão entre o que era importante deixar filtrar nas Trades/Nós antes de efetuar o agrupamento, e o que deveria ser deixado agrupar antes para depois aplicar filtros/buscas. O ponto disto é que no modelo em que se busca/filtra pelas Trades/Nós, isto coloca uma complexidade a ser decida sobre performance. O que esta performance não deve ser questionada no modelo onde o agrupamento é efetuado a priori.
+
+- Protocolo FIX;
+  -- Quando comunica com a bolsa (B3), é necessário fornecer userId, password e o nome do sistema (nome da aplicação). Este nome da aplicação/sistema não é comumente solicitado em outras conexões FIX.
+  -- Aquele que abre comunicação utilizando o protocolo FIX, deve fornecer possibilidade de "retry", ou seja, caso a conexão seja pertida por qualquer motivo, deve tentar abrir conexão novamente, enquanto o processo deste cliente estiver sendo executado.
+
+---
+
+[INICIAR IMPLEMENTAÇÃO]
+
+Talvez fosse interessante começar a desenhar as interfaces Java que a implementação da estrutura de eventos e estados devesse implementar. A ideia é que fosse possível implementar mais de uma estrutura/abordagem, a apresentasse os ganhos de uma utilização sobre a outra.
+  e.g 1; A primeira implementação deve atender uma estrutura em árvore, onde a idéia é que embora sejam criados Trades/Pernas/Nós com base em outras, todas as Trades/Pernas/Nós existentes continuem co-existindo, mesmo que um evento já tenha sido executado sob uma Perna/Trade/Nó. Isto tem o "contra" de utilização de bastante memória, uma vez que toda a estrutura sempre estará completa. A parte boa desta abordagem é que não se deve preocupar com muitos cálculos/inferências computacionais para se obter/filtrar dados, pois está tudo sempre a mão.
+  e.g 2; Uma outra abordagem seria manter apenas os elementos folha (Trade/Perna/Nó) em memória, e se fosse necessário fazer buscas por estados anteriores, então deveria refazer cálculos na estrutura (Eventos/Estados), para então permitir descobrir a história/histórico das reações, para descrever o motivo do estado estar como está. Em outras palavras, para se obter informações de auditoria por exemplo, seria mais complicado utilizar esta abordagem.
+
+---
+
+TODO; duas coisas;
+  - Eventos deverão ter uma lista de Objetos que declarem; (anteriormente eu tinha pensado num único item/Objeto que deveria ser composto como abaixo, mas na verdade, deve ser uma lista/set)
+    - Predicado; a quais Trades/Pernas/Nós deve ser aplicado/reagido
+    - Update Command; definição de quais campos devem ser atualizados, juntos com os devidos valores
+  - Atualizar exemplos (testes de mesa), pois eu tinha colocado que para "Indicação de AdminCon", "Quebra/Desdobro" e "Distribuição", eu estava fazendo os devidos cálculos de porcentagem de quantidades que deveria ser tirada de cada Trade, mas o correto é que para os Eventos e Estados, os Eventos devem chegar já com estas informações definidas, e a máquina de Eventos e Estados apenas aplica as alterações, gerando possivelmente novas pernas (se necessário).

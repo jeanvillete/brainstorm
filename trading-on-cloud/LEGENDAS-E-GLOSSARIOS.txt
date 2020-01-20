@@ -9,7 +9,7 @@ Legenda;
 * Corretoras são geralmente os agentes licenciados na bolsa de valores, que podem emitir Ordens em prol de seus clientes. Normalmente as Ordens são emitidas pelos operadores da mesa de negociação da corretora.
   ** DMA (Direct Market Access) é uma modalidade oferecida pela corretora, onde permite que o seu cliente tenha acesso ao mercado (mercado de ações, por exemplo) e possa tanto visualizar produtos quanto emitir Ordens em seu favor, sem a necessidade de um operador da mesa.
   ** Um dos papeis cruciais dentro da corretora, além de efetuar compras e vendas de PAPEIS, é o de distribuir tais PAPEIS/ações de maneira justa para os seus clientes, pois normalmente a corretora compra os vários PAPEIS/ações em lotes, e após concretizado tais negócios, a corretora, através do time de backoffice, tem a responsabilidade de aplicar distribuições para os clientes finais, onde isto ocorre em eventos determinados como alocações, e se dão em contas intermediárias ou dos clientes finais.
-* Trading; Momento em que os operadores (frontoffice) estão trabalhando na mesa, ofertando compras e vendas das ações através da emissão de Ordens.
+* Trading; Momento em que os operadores (front-office) estão trabalhando na mesa, ofertando compras e vendas das ações através da emissão de Ordens.
 * Pós Trading; Momento em que negócios já foram realizados (concretizados), e as informações destes negócios/Trades chegam nas corretoras, para permitir que o pessoal de backoffice da corretora possa distribuir as negociações para as contas dos clientes finais.
 
 Fatos, teoremas e requisitos;
@@ -40,11 +40,3 @@ As corretoras, em especial as grandes que operam em favor de muitos clientes, vi
 * Repasses; // TODO
   ** Repasse de recebimento; // TODO
   ** Repasse de envio; // TODO
-
----
-
-Estrutura e representação de dados;
-Se faz necessário uma estrutura de dados que possibilite representar informações de Trades, além dos eventos de alocações subsequentes.
-  - Provavelmente uma estrutura em árvore seja uma boa pedida para representação das Trades e suas pernas, onde cada nó (nós) são os estados gerados, e as arestas que ligam os nós são os eventos que ocorream sobre tal Trade/Perna.
-    -- Alguns eventos, em especial aqueles de Alocações e de Repasse precisam de confirmação para tomarem efeitos, ou seja, existe um par de evento chamado de requisição e resposta, onde somente quando chega a resposta com status de sucesso é que o tal evento toma efeito na Trade/perna gerando outras pernas (Trade alterada).
-  - Importante que esta estrutura possa ser apresentada num modelo de auditoria, mostrando o que ocorreu ou alterou na vida da Trade, ou suas pernas, quando eventos de alocação foram lançados sobre ela (Trade).
