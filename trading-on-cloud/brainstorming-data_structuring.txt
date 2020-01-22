@@ -1,0 +1,20 @@
+[Events]
+  - O domínio Event deve obrigar que seja fornecido um identificador, e.g; Event#getIdentifier():String
+  - O domínio Event terá um conjunto/coleção que referencia todas os Nós/Outcomes gerados/populados/melhorados a partir da reação do Event corrente. Event#outcomes:Set<Outcome>
+
+[Outcomes]
+  - O domínio Outcome deve ter referência ao Event anterior, ou seja, ao Event que foi reagido e gerou o Outcome corrente; Outcome#eventSource:Event
+  - O domínio Outcome pode ter (nullable) referência a um Event posterior (caso exista um), ou seja, caso tenha chegado novo Event que foi reagido com base no Outcome corrente; Outcome#nextEvent:Event
+  - Como as propriedades dos Nós/Outcomes precisam ser mutáveis, fornecidos dinamicamente com nomes, valores e os tipos, talvez uma boa estrutura de dados para representar as propriedades seja um mapa com nome dos campos representados via uma String e os valores são Objetos;
+    e.g;
+      Map<String, Object>{{
+        put("tradeId", "trade-id-1");
+        put("orderId", "order-id-1");
+        put("accountId", AccountId.of("999"));
+        put("side", Side.BUY);
+        put("quantity", 1000);
+        put("price", new BigDecimal("2.95"));
+      }}
+  - Os valores armazenados na estrutura/mapa acima pode ser encapsulado num Objeto que informe se o valor pode ou não ser alterado, e.g;
+    Outcome#ImmutableValue#value:Object // não deveria permitir que tal valor pudesse ser alterado, um IllegalStateException deveria ser lançado se uma operação de alteração chegasse para este tipo de valor
+    Outcome#MutableValue#value:Object // propriedade que indica/sugere que o valor correspondente deste Outcome pode ser alterado

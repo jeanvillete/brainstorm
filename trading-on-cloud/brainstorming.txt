@@ -5,8 +5,8 @@ Funcionalidades desejáveis;
   - Quando obtido um determinado agrupamento, no componente cliente do "trading-on-cloud-core", este deve possibilitar recuperar e apresentar algumas informações das Trades/negócios/nós que formam este agrupamento, ou seja, as Trades de uma Ordem ou de um Consolidado por Papel.
 
 Requisitos e definições;
-  - A "representação do tradeing-on-cloud-core" apenas expõe domínios e estruturas para (como próprio nome diz) representar os resultados de reações entre Nós/Estados e Eventos. São expostos via os Eventos as alterações das propropriedades e dos Nós/Estados propriamente ditos. Regras do que representa quando algo pode ser inserido/alterado/removido, é externo a "representação do trading-on-cloud-core", e este componente externo tem a obrigação de lidar com estas regras, e intregridade das mesmas.
-  - Um único evento, pode ser aplicado a diversos nós (Trades/Pernas) de uma única vez, então deve ser possível fornecer no evento um Predicado que indique a quais nós (Trades/Pernas) o evento deve ser aplicado/reagido.
+  - A "representação do trading-on-cloud-core" apenas expõe domínios e estruturas para (como próprio nome diz) representar os resultados de reações entre Nós/Estados e Eventos. São expostos via os Eventos as alterações das propropriedades e dos Nós/Estados propriamente ditos. Regras do que representa, e/ou quando algo pode ser inserido/alterado/removido, é externo a "representação do trading-on-cloud-core", e este componente externo tem a obrigação de lidar com estas regras, e intregridade das mesmas, ou seja, os dados estruturados nos Nós/Estados não tem regras ou validações para as alterações, logo se chegam Eventos orientando alterações, estas serão aplicadas.
+  - Um único Evento, pode ser aplicado a diversos nós (Trades/Pernas) de uma única vez, então deve ser possível fornecer no evento um Predicado que indique a quais nós (Trades/Pernas) o evento deve ser aplicado/reagido.
   - Deve have a possibilidade de se cancelar ou remover um Evento, tendo como resultado que seu efeito seja nulo (não seja aplicado, ou seja desfeito).
   - A partir de uma Perna/Trade/Nó deve ser possível acessar o evento que a gerou, e se houver, o(s) Evento(s) subsequente(s).
   - Eventos podem chegar desordenados, e deve haver a possibilidade de ordenar e aplicar estes eventos.
@@ -14,7 +14,7 @@ Requisitos e definições;
     -- Não deve haver nenhum tipo de validação implementada para a representação do "trading-on-cloud-core", apenas aplicar as os Eventos, e suas as reações, sejam em cadeia ou não (caso um Evento seja interpolado entre outros, por conta de chegada desordenada de Eventos).
   - Os Eventos devem conter identificadores, que permita que estes sejam propagados várias vezes em todo o sistema, mas considerados apenas uma única vez nas estruturas em árvore.
     -- Event#getIdentifier():String
-  - No momento de se instanciar um Evento deve-se indicar se a instrução deste Evento diz da colocação de um novo item na raiz após a árvore (um novo Item/Nó/Trade na estrutura), ou se é um Evento que será aplicado a itens já existentes, que se aplicaria uma atualização nestes;
+  - No momento de se instanciar um Evento deve-se indicar se a instrução deste Evento diz da colocação de um novo item na raiz após a árvore (um novo Item/Nó/Trade na estrutura), ou se é um Evento que será aplicado a itens/outcomes já existentes, que se aplicaria uma atualização nestes;
     -- new Event(Node<extends Instruction>.insert(tradeId:String)):Event //provavelmente um Selector poderia ser fornecido no insert, para garantir que nenhum Nó existe com este tradeId, caso contrário, poderia lançar um IllegalStateException, por exemplo.
     -- new Event(Node<extends Instruction>.update(selector:Selector, command:Command)):Event
   ---
