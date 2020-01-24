@@ -1,6 +1,6 @@
 [Events]
   - O domínio Event deve obrigar que seja fornecido um identificador, e.g; Event#getIdentifier():String
-  - O domínio Event terá um conjunto/coleção que referencia todas os Nós/Outcomes gerados/populados/melhorados a partir da reação do Event corrente. Event#outcomes:Set<Outcome>
+  - O domínio Event terá um conjunto/coleção que referencia todos os Nós/Outcomes gerados/populados/melhorados a partir da reação do Event corrente. Event#outcomes:Set<Outcome>
 
 [Outcomes]
   - O domínio Outcome deve ter referência ao Event anterior, ou seja, ao Event que foi reagido e gerou o Outcome corrente; Outcome#eventSource:Event
