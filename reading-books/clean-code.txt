@@ -1,0 +1,36 @@
+Notes taken while reading "clean code", the Robert Martin's book.
+
+TPM -> Total Productive Maintenance; expression which comes on the Japanese scene, which focus on "maintenance" rather than on "production".
+  It makes all sense on the context of software development, which the production/creation phase of a software is less than 20%, the rest is for "maintenance", which is the rest of the lifecycle.
+
+Lean, 5S principals;
+- Seiri -> organization/sort; knowing where things are is crucial - using approaches such as suitable naming.
+- Seiton -> tidiness/systematize; "a place for everything, and everything in its place". A piece of code should be where you expect to find it, and if not, you should refactor to get it there.
+- Seiso -> cleaning/shine; keep the workplace free of hanging wires, grease, scraps and waste.
+- Seiketsu -> standardization; the group agrees about how to keep the workplace clean - have a consistent coding style and a set of practices within the group.
+- Shutsuke -> discipline/self-discipline; have the discipline to follow the practices and to frequentely reflect on one's work and be willing to change.
+
+Expectation on the begining of the book;
+  - Be able to tell the difference beteween good code and bad code
+  - How to write good code
+  - Transform a bad code into a good code
+
+--
+
+  Bad code when goes big and cannot be cleaned up anymore, takes so long time from the team to apply any change, fix or add feature, that the productivity decreases, asymptotically approaching zero.
+  As the productivity decreases, management does the only thing they can; they add more staff to the project in hopes of increasing productivity. But that new staff is not versed in the design of the system. They don't know the difference between a change that matches the design intent and a change that thwarts the design intent.
+  Furthermore, everyone are under pressure to increase productivity, so they all make more and more messes, driving the productivity ever further toward zero.
+--
+
+  Speak about time, schedules and tasks with the management, let him/her know if time gets too tight to get a good code.
+  Be professional is an obligation.
+  Release a bad code and decrease productivity is something the team/developers must be aware and spread this information out with managers. Developers is responsible for it.
+
+  A maintainable good quality code is a duty, a commitment e responsibility of the developers.
+--
+
+  Bjarne Stroustrup, inventor of C++
+  - I like my code to be elegant and efficient. The logic should be straightfoward TO MAKE IT HARD FOR BUGS TO HIDE, the dependencies minimal to ease maintenance, error handling complete according to an articulated strategy, and performance close to optimal so as not to tempt people to make the code messy with unprincipled optimizations. Clean code does one thing well. -
+
+  Clean code is focused. Each function, each class, each module exposes a single-minded attitude that remains entirely unditracted, and unpolluted, by the surrounding details.
+--
