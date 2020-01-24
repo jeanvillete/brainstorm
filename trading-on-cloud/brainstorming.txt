@@ -11,14 +11,16 @@ Requisitos e definições;
   - Deve have a possibilidade de se cancelar ou remover um Evento, tendo como resultado que seu efeito seja nulo (não seja aplicado, ou seja desfeito).
     -- Um Event só pode ser cancelado/inativado caso este seja folha, caso contrário uma Exceção deve ser retornada/lançada.
   - A partir de uma Perna/Trade/Nó deve ser possível acessar o evento que a gerou, e se houver, o(s) Evento(s) subsequente(s), ou seja, navegar na árvore (estrutura de dados), tanto subindo quanto descendo nas arestas e nós.
-  - Eventos podem chegar desordenados, e deve haver a possibilidade de ordenar e aplicar estes eventos.
-    -- Caso eventos chegam desordenados, a estrutura deve identificar a posição que este "último" Evento que chegou deveria estar, então posicionar este e fazer com que todos Nós e Eventos (que chegam indevidamente antes) sejam reagidos/executados novamente.
-    -- Não deve haver nenhum tipo de validação implementada para a representação do "trading-on-cloud-core", apenas aplicar as os Eventos, e suas as reações, sejam em cadeia ou não (caso um Evento seja interpolado entre outros, por conta de chegada desordenada de Eventos).
   - Os Eventos devem conter identificadores, que permita que estes sejam propagados várias vezes em todo o sistema, mas considerados apenas uma única vez nas estruturas em árvore.
     -- Event#getIdentifier():String
   - No momento de se instanciar um Evento deve-se indicar se a instrução deste Evento diz da colocação de um novo item na raiz após a árvore (um novo Item/Nó/Trade na estrutura), ou se é um Evento que será aplicado a itens/outcomes já existentes, que se aplicaria uma atualização nestes;
     -- new Event(Node<extends Instruction>.insert(tradeId:String)):Event //provavelmente um Selector poderia ser fornecido no insert, para garantir que nenhum Nó existe com este tradeId, caso contrário, poderia lançar um IllegalStateException, por exemplo.
     -- new Event(Node<extends Instruction>.update(selector:Selector, command:Command)):Event
+  ---
+  - Na instanciação do contexto do "trading-on-cloud-core" é importante fornecer "Comparators" que permita descobrir a ordenação desejada para os Events. Isto permite que quando Events chegam desordenados, esta ordenação pode ser efetivada/re-efetivada (sortear os elementos existentes comparando com o que acabou de chegar) e as reações serem refeitas.
+  - Eventos podem chegar desordenados, e deve haver a possibilidade de ordenar e aplicar/reaplicar estes eventos.
+    -- Caso eventos chegam desordenados, a estrutura deve identificar a posição que este "último" Evento que chegou deveria estar, então posicionar este e fazer com que todos Nós e Eventos (que chegam indevidamente antes) sejam reagidos/executados novamente.
+    -- Não deve haver nenhum tipo de validação implementada para a representação do "trading-on-cloud-core", apenas aplicar as os Eventos, e suas as reações, sejam em cadeia ou não (caso um Evento seja interpolado entre outros, por conta de chegada desordenada de Eventos).
   ---
   - Quando construido/instanciado o contexto do "trading-on-cloud-core", deve ser possível solicitar limpeza/coleta de dados em memória. 
     -- Um método que seja capaz de empilhar solicitações para estas limpezas/coletas;
