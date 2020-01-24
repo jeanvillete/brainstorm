@@ -25,6 +25,7 @@ Requisitos e definições;
       --- Solicitar a limpeza/coleta não é garantia de execução imediata.
     -- Para decidir quais são os Nós/Trades/Pernas a serem removidas, deve-se fornecer um seletor (Predicate) que será aplicado especialmente em Events.
       --- Provavelmente será mais aplicado em eventos, ou o primeiro evento de uma Trade/Nó.
+    -- O conjunto de Events selecionados no Predicado/Selector fornecido deverá ser removido, e com este todos os Nós/Pernas/Trades gerados a partir deste evento.
     -- Context#erase(selector:Selector):CompletableFuture<EraseResult>
       --- O selector fornecido será aplicado para encontrar Events, e não Nós/Trades/Pernas.
       --- Events devem ser removidos no estilo pilha, ou seja, os ultimos colocados devem ser removidos antes. Isto porque o mesmo evento pode ser aplicado a vários Nós de uma única vez, então se houver a tentativa de remover um evento que gerou Outcomes com Events subsequentes, então esta tentativa de "Context#erase" falhará, então o o CompletableFuture<EraseResult> deverá conter as devidas informações da falha.
