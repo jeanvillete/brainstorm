@@ -1,27 +1,36 @@
-O objetivo deste documento e seus filhos/irmãos, é apresentar o domínio das informações a serem tratadas e definir uma solução que permita armazenar e representar negócios (Trades) efetuados na bolsa de valores, que são por último trafegados via fix-protocol aos clientes (corretoras) da bolsa.
+O objetivo deste documento e seus filhos/irmãos, é apresentar o domínio das informações a serem tratadas e definir uma solução que permita armazenar e representar negócios (Trades) efetuados na bolsa de valores, que são por último trafegados via fix-protocol aos clientes (corretoras).
 
 Legenda;
 * Bolsas de Valores; São responsáveis por cadastrar os participantes do mercado, e intermediar os desejos de negociações (venda ou compra) entre estes participantes, além de garantir as entregas das negociações, ou seja, o dinheiro para quem vendeu a ação e a transferência legal do PAPEL para o comprador.
+
 * BOV; Bolsa de Valores de São Paulo; Mercado para negociação de Ações/PAPEIS de uma empresa, ou seja, os investidores se tornam sócios de pequenas parcelas da empresa ao adquirir um PAPEL, mas pode vender este PAPEL para outro investidor através deste mercado.
+
 * BM&F; Bolsa de Mercadorias e Futuros; Mercado para negociação de contratos, commodities através de derivativos agrícolas e ativos financeiros, como taxas de juros, câmbio, e também através de títulos e índices.
+
 * B3; Brasil, Bolsa Balcão; A sigla B3 é resultante da junção das empresas "Bolsa de Valores de São Paulo", "Bolsa de Mercadorias e Futuros" e a CETIP (Central de Custódia e Liquidação de Títulos). Mesmo sendo uma única Bolsa (como uma única empresa), elas continuam atuando nos diferentes segmentos.
+
 * Papeis (ações/istrumentos); Papeis são de alguma maneira, uma pedaço legal de uma empresa, onde o dententor deste papel tem direitos e deveres para com esta empresa. Um papel é emitido em nome da empresa e negociado no mercado, e para facilitar as referências da empreas, os PAPEIS tem uma espécie de apelido, por exemplo, para empresa "Vale S.A." há o apelido "VALE3". Para empresa "Petroleo Brasileiro SA Petrobras" os apelidos para diferentes PAPEIS "PETR3" e "PETR4".
+
 * Corretoras são geralmente os agentes licenciados na bolsa de valores, que podem emitir Ordens em prol de seus clientes. Normalmente as Ordens são emitidas pelos operadores da mesa de negociação da corretora.
   ** DMA (Direct Market Access) é uma modalidade oferecida pela corretora, onde permite que o seu cliente tenha acesso ao mercado (mercado de ações, por exemplo) e possa tanto visualizar produtos quanto emitir Ordens em seu favor, sem a necessidade de um operador da mesa.
   ** Um dos papeis cruciais dentro da corretora, além de efetuar compras e vendas de PAPEIS, é o de distribuir tais PAPEIS/ações de maneira justa para os seus clientes, pois normalmente a corretora compra os vários PAPEIS/ações em lotes, e após concretizado tais negócios, a corretora, através do time de backoffice, tem a responsabilidade de aplicar distribuições para os clientes finais, onde isto ocorre em eventos determinados como alocações, e se dão em contas intermediárias ou dos clientes finais.
+
 * Trading; Momento em que os operadores (front-office) estão trabalhando na mesa, ofertando compras e vendas das ações através da emissão de Ordens.
+
 * Pós Trading; Momento em que negócios já foram realizados (concretizados), e as informações destes negócios/Trades chegam nas corretoras, para permitir que o pessoal de backoffice da corretora possa distribuir as negociações para as contas dos clientes finais.
 
 Fatos, teoremas e requisitos;
 * Ordens refere-se ao ato da submissão de intenção de uma pessoa/máquina (algoritmos, DMA) de comprar ou vender PAPEIS. Não necessáriamente toda ordem é efetivada, pode ser que apenas uma parte de tal ordem tenha "matches", e que geram negócios (Trades), ou pior ainda, é uma Ordem de venda com valor tão alto que ninguém oferte um valor para comprá-la, ou uma Ordem de compra com valor tão baixo que ninguém tem intenção de vender neste valor, fazendo com que tal Ordem não gere nenhuma negociação/Trade.
   ** Quando negócios são efetivados, as informações das Trades que chegam para as corretoras através do "protocolo fix", informam do Trade qual o valor/preço, a quantidade, qual a quantidade que foi solicitada na Ordem, a quantidade que já foi negociada anteriormente, e a quantidade que falta a ser negociada da Ordem.
+
 * Trades são resultantes de "matches" (acordos ou negócios fechados) entre pessoas/máquinas (algoritmos, DMA) que detém e querem vender PAPEIS e pessoas/máquinas (algoritmos) que tem interesse em adquirir tais PAPEIS.
 
 Contas e Alocações;
 As corretoras, em especial as grandes que operam em favor de muitos clientes, visando sempre uma melhor performance, compram ou vendem em grandes lotes, ou seja, negócios são realizados para vários clientes de uma única vez. Imagine então que os clientes João, Maria e José, ambos desejam adquirir PAPEIS da Petrobrás, respectivamente 5000, 7000 e 3000. A corretora emite uma ORDEM de compra de 15000 destes PAPEIS a um determinado preço. Neste cenário hipotético, 3 negócios são efetuados, sendo; Primeiro negócio com 6000 PAPEIS a 29,67, segundo negócio com 3500 PAPEIS a 29,84 e um terceiro negócio com 4000 a 29,98, totalizando assim 13500 PAPEIS comprados, porém ficou faltando adquirir 1500 PAPEIS. A corretora tem por dever e obrigação DISTRIBUIR igualmente entre os CLIENTES os PAPEIS adquiridos, proporcionalmente as quantidades e os valores obtidos. Aqui entra então dois conceitos/domínios muito importantes, que são as CONTAS utilizadas pela corretora e as ALOCAÇÕES/operações efetuadas nas Trades/Negócios.
+
 * Contas; As contas são atribuídas aos negócios/Trades e permitem aos operadores saberem onde se encontram e o que deve ser feito nestas Trades até que as mesmas sejam DISTRIBUÍDAS aos clientes finais.
   ** Contas de execução; As contas de execução na Trade ajudam a representar o estado da Trade no sentido de qual conta e seu tipo a Trade se encontra e para onde a mesma pode ir. Há algumas operações de ALOCAÇÃO que podem alterar esta CONTA na Trade, como TROCA, QUEBRA/DESDOBRO e INDICAÇÃO DE ADMINCON. Junto com outras informações da Trade, a CONTA de execução é fundamental para extrair relatórios e agrupamentos do estado dos negócios num período de tempo, e.g; PREÇO MÉDIO de hoje, ontem, etc.
-  ** Contas de alocação; As contas de alocação na Trade ajudam a representar o estado da Trade no sentido de qual conta e seu tipo a Trade se encontra e para onde a mesma pode ir. Há algumas operações de ALOCAÇÃO que podem alterar esta CONTA na Trade, como TROCA, QUEBRA/DESDOBRO, INDICAÇÃO DE ADMINCON e por fim a DISTRIBUIÇÃO. Junto com outras informações da Trade, a CONTA de execução é fundamental para extrair relatórios e agrupamentos do estado dos negócios num período de tempo, e.g; ORDENS e CONSOLIDADOS POR PAPEL de hoje, ontem, etc.
+  ** Contas de alocação; As contas de alocação na Trade ajudam a representar o estado da Trade no sentido de qual conta e seu tipo a Trade se encontra e para onde a mesma pode ir. Há algumas operações de ALOCAÇÃO que podem alterar esta CONTA na Trade, como TROCA, QUEBRA/DESDOBRO, INDICAÇÃO DE ADMINCON e por fim a DISTRIBUIÇÃO. Junto com outras informações da Trade, a CONTA de alocação é fundamental para extrair relatórios e agrupamentos do estado dos negócios num período de tempo, e.g; ORDENS e CONSOLIDADOS POR PAPEL de hoje, ontem, etc.
   ** Tipos de Contas;
     *** Contas de captura; // TODO
     *** AdminCon; // TODO
@@ -32,6 +41,7 @@ As corretoras, em especial as grandes que operam em favor de muitos clientes, vi
       **** Normal com master; // TODO
       **** Normal sem master; // TODO
     *** Erro; // TODO
+
 * Alocações; // TODO
   ** Troca; Este tipo de ALOCAÇÃO refere-se literalmente ao ato de TROCAR as CONTAS de ALOCAÇÃO e EXECUÇÃO da Trade. // TODO, delimitar as regras, de quais contas para quais contas TROCAS podem ser efetuadas
   ** Quebra/Desdobro; // TODO // TODO, delimitar as regras, de quais contas para quais contas QUEBRAS/DESDOBROS podem ser efetuadas

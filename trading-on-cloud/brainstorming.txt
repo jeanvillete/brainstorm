@@ -1,36 +1,36 @@
 [COMPOSIÇÃO DE EVENTOS E ESTADOS]
 
 Funcionalidades desejáveis;
-  - Deve ser possível fornecer filtros para payloads/mensagens/negócios/trades não desejadas. A falta do filtro indica que o payload deve entrar na estrutura de armazenamento, representação, reações e por ultimo as as invocações das Triggers para os Handlers fornecidos.
-  - Quando obtido um determinado agrupamento, no componente cliente do "trading-on-cloud-core", este deve possibilitar recuperar e apresentar algumas informações das Trades/negócios/nós que formam este agrupamento, ou seja, as Trades de uma Ordem ou de um Consolidado por Papel.
+  - Deve ser possível fornecer filtros para payloads/mensagens/negócios/trades não desejadas. A falta do filtro indica que o payload deve entrar na estrutura de armazenamento, representação, reações e por ultimo as invocações das Triggers para os Handlers fornecidos.
+  - Quando obtido um determinado agrupamento, no componente cliente do "trading-on-cloud-core", este deve possibilitar recuperar e apresentar algumas informações das Trades/negócios/nós que formam este agrupamento, ou seja, as Trades de uma Ordem, de um Consolidado por Papel, de um cálculo de Preço Médio, etc.
 
 Requisitos e definições;
   - A "representação do trading-on-cloud-core" apenas expõe domínios e estruturas para (como próprio nome diz) representar os resultados de reações entre Nós/Estados e Eventos. São expostos via os Eventos as alterações das propropriedades e dos Nós/Estados propriamente ditos. Regras do que representa, e/ou quando algo pode ser inserido/alterado/removido, é externo a "representação do trading-on-cloud-core", e este componente externo tem a obrigação de lidar com estas regras, e intregridade das mesmas, ou seja, os dados estruturados nos Nós/Estados não tem regras ou validações para as alterações, logo se chegam Eventos orientando alterações, estas serão aplicadas.
   - Um único Evento, pode ser aplicado a diversos nós (Trades/Pernas) de uma única vez, então deve ser possível fornecer no evento um Predicado que indique a quais nós (Trades/Pernas) o evento deve ser aplicado/reagido.
-    -- Poderá ser fornecido Predicados que se aplicam a Nós (Trades/Pernas) ou a Events, mas um Evento só poderá ser aplicado a Nós ou Events num momento, mas nunca aos dois domínios ao mesmo tempo.
-  - Deve have a possibilidade de se cancelar ou remover um Evento, tendo como resultado que seu efeito seja nulo (não seja aplicado, ou seja desfeito).
-    -- Um Event só pode ser cancelado/inativado caso este seja folha, caso contrário uma Exceção deve ser retornada/lançada.
+    -- Poderá ser fornecido Predicados que se aplicam a Nós (Trades/Pernas) ou a Eventos, mas um Evento só poderá ser aplicado de uma vez a Nós ou a Eventos, mas nunca aos dois domínios ao mesmo tempo.
+  - Deve haver a possibilidade de se cancelar ou remover um Evento, tendo como resultado que seu efeito seja nulo (não seja aplicado, ou seja desfeito).
+    -- Um Evento só pode ser cancelado/inativado caso este seja folha, caso contrário uma Exceção deve ser retornada/lançada.
   - A partir de uma Perna/Trade/Nó deve ser possível acessar o evento que a gerou, e se houver, o(s) Evento(s) subsequente(s), ou seja, navegar na árvore (estrutura de dados), tanto subindo quanto descendo nas arestas e nós.
-  - Os Eventos devem conter identificadores, que permita que estes sejam propagados várias vezes em todo o sistema, mas considerados apenas uma única vez nas estruturas em árvore.
+  - Os Eventos devem conter identificadores, que permita que estes sejam propagados várias vezes em todo o sistema, mas considerados apenas uma única vez nas estruturas em árvore. NOTA: Característica que permita idempotência (IDEMPOTENT).
     -- Event#getIdentifier():String
   - No momento de se instanciar um Evento deve-se indicar se a instrução deste Evento diz da colocação de um novo item na raiz após a árvore (um novo Item/Nó/Trade na estrutura), ou se é um Evento que será aplicado a itens/outcomes já existentes, que se aplicaria uma atualização nestes;
     -- new Event(Node<extends Instruction>.insert(tradeId:String)):Event //provavelmente um Selector poderia ser fornecido no insert, para garantir que nenhum Nó existe com este tradeId, caso contrário, poderia lançar um IllegalStateException, por exemplo.
     -- new Event(Node<extends Instruction>.update(selector:Selector, command:Command)):Event
   ---
-  - Na instanciação do contexto do "trading-on-cloud-core" é importante fornecer "Comparators" que permita descobrir a ordenação desejada para os Events. Isto permite que quando Events chegam desordenados, esta ordenação pode ser efetivada/re-efetivada (sortear os elementos existentes comparando com o que acabou de chegar) e as reações serem refeitas.
+  - Na instanciação do contexto do "trading-on-cloud-core" é importante fornecer "Comparators" que permita descobrir a ordenação desejada para os Eventos. Isto permite que quando Eventos chegam desordenados, esta ordenação pode ser efetivada/re-efetivada (sortear os elementos existentes comparando com o que acabou de chegar) e as reações serem refeitas.
   - Eventos podem chegar desordenados, e deve haver a possibilidade de ordenar e aplicar/reaplicar estes eventos.
     -- Caso eventos chegam desordenados, a estrutura deve identificar a posição que este "último" Evento que chegou deveria estar, então posicionar este e fazer com que todos Nós e Eventos (que chegam indevidamente antes) sejam reagidos/executados novamente.
-    -- Não deve haver nenhum tipo de validação implementada para a representação do "trading-on-cloud-core", apenas aplicar as os Eventos, e suas as reações, sejam em cadeia ou não (caso um Evento seja interpolado entre outros, por conta de chegada desordenada de Eventos).
+    -- Não deve haver nenhum tipo de validação implementada para a representação do "trading-on-cloud-core", apenas aplicar os Eventos, e suas as reações, sejam em cadeia ou não (caso um Evento seja interpolado entre outros, por conta de chegada desordenada de Eventos).
   ---
   - Quando construido/instanciado o contexto do "trading-on-cloud-core", deve ser possível solicitar limpeza/coleta de dados em memória. 
     -- Um método que seja capaz de empilhar solicitações para estas limpezas/coletas;
       --- Solicitar a limpeza/coleta não é garantia de execução imediata.
     -- Para decidir quais são os Nós/Trades/Pernas a serem removidas, deve-se fornecer um seletor (Predicate) que será aplicado especialmente em Events.
       --- Provavelmente será mais aplicado em eventos, ou o primeiro evento de uma Trade/Nó.
-    -- O conjunto de Events selecionados no Predicado/Selector fornecido deverá ser removido, e com este todos os Nós/Pernas/Trades gerados a partir deste evento.
+    -- O conjunto de Eventos selecionados no Predicado/Selector fornecido deverá ser removido, e com este todos os Nós/Pernas/Trades gerados a partir deste evento.
     -- Context#erase(selector:Selector):CompletableFuture<EraseResult>
-      --- O selector fornecido será aplicado para encontrar Events, e não Nós/Trades/Pernas.
-      --- Events devem ser removidos no estilo pilha, ou seja, os ultimos colocados devem ser removidos antes. Isto porque o mesmo evento pode ser aplicado a vários Nós de uma única vez, então se houver a tentativa de remover um evento que gerou Outcomes com Events subsequentes, então esta tentativa de "Context#erase" falhará, então o o CompletableFuture<EraseResult> deverá conter as devidas informações da falha.
+      --- O selector fornecido será aplicado para encontrar Eventos, e não Nós/Trades/Pernas.
+      --- Eventos devem ser removidos no estilo pilha, ou seja, os ultimos colocados devem ser removidos antes. Isto porque o mesmo evento pode ser aplicado a vários Nós de uma única vez, então se houver a tentativa de remover um evento que gerou Outcomes com Events subsequentes, então esta tentativa de "Context#erase" falhará, então o o CompletableFuture<EraseResult> deverá conter as devidas informações da falha.
       --- O retorno "EraseResult" deverá indicar se teve sucesso ou falha, e no caso de falha, o motivo da falha deve ser fornecido, seja com código e/ou mensagens descritivas.
   ---
   - Eventos são necessários para alteração dos estados, e somente através dos eventos tais estados podem ser alterados.

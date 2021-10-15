@@ -1,0 +1,56 @@
+TradeCancelEventMessage
+  35=8; EXEUCTION_REPORT( 8 )
+    representa uma mensagem provinda do sistema DROP COPY, que pode ter uma Inserção de uma Trade ou o Cancelamento de uma Trade.
+
+  150=[F|H]; execType
+    150=F
+      representa a Inserção de uma Trade (o acordo de um negócio foi estabelecido, uma venda/compra)
+    150=H
+      representa o Cancelamento de uma Trade (o negócio em questão foi cancelado)
+
+  55=![TEST | TF]
+    o campo 55 precisa ter o valor diferente de (String) TEST ou TF
+
+  75=${YYYY-MM-DD}; tradeDate
+    o campo 75 carrega a data, cujo valor deve estar no período de 365 dias atrás até hoje
+
+  ? optinal value
+  + required value
+  --
+  150=H => EventType => TradeCapturedEventType.TRADE_CANCELED_CAPTURED
+  1=? => Account Id (Number)
+  11=+ => client order id
+  17=+ => ExcID (exchangeExecutionID)
+  5149=? => Memo (observações/notas)
+  37=+ => OrderID
+  59=+ => time in force (order validity type)
+  31=? => lastPX (price)
+  32=? => lastQty (quantity)
+  198=+ => secondary order id
+  1180=+ => appl ID (session ID)
+  54=+ => side
+  55=+ => symbol/ticker
+  75=+ => trade date (LocalDate)
+  60=+ => transaction time (LocalDateTime)
+  336=? => trading session id
+  382=[0].375=? => counter party broker
+  625=? => trading session sub id
+  6032=+ => unique trade id (trade number)
+  6392=? => seucirty trading status id
+  1115=? => order category
+  453=[n].452=7.448=? => party code (broker dealer code)
+  453=[n].452=36.448=? => party code (entering trader)
+  453=[n].452=54.448=? => party code (sender location)
+  453=[n].452=4.448=? => party code (clearing firm code)
+  453=[n].452=5.448=? => party code (investor id)
+  453=[n].452=17.448=? => party code (contra firm code)
+  453=[n].452=76.448=? => party code (desk id)
+  38=? => order quantity
+  44=? => order price
+  41=? => origClOrdId (original client order id)
+  526=? => secondaryClOrdID (secondary client order id)
+  14=?  => cumQty (filled quantity)
+  432=? expireDate (expiration date) (LocalDate)
+  40=? => order type
+  424=? => day order quantity
+  --
